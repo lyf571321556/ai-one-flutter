@@ -44,9 +44,9 @@ dependencies:
   #网页中唤醒原生app页面
   uni_links: ^0.2.0
   fluro: ^2.0.3 #ios_ android web
-  auto_size:
-    git:
-      url: git://github.com/flutterchina/auto_size.git
+#  auto_size:
+#    git:
+#      url: git://github.com/flutterchina/auto_size.git
   connectivity: ^0.4.9 #ios_ android web
   dio: ^3.0.9 #all
 #  dio_http_cache: ^0.2.8 # ios_ android
