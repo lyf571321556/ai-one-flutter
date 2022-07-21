@@ -30,11 +30,11 @@ dependencies:
   redux: ^4.0.0
   redux_thunk: ^0.3.0
 
-  #shared_preferences: ^0.5.8 #offical lib support ios  android web.
-  #flutter localstorage for ios/android/desktop/web
+  #shared_preferences: ^0.5.8 #offical lib support ios_  android web.
+  #flutter localstorage for ios_/android/desktop/web
   localstorage: ^3.0.2+5
-  webview_flutter: ^0.3.22+1 #ios android
-  url_launcher: ^5.5.0 # ios android web
+  webview_flutter: ^0.3.22+1 #ios_ android
+  url_launcher: ^5.5.0 # ios_ android web
   bot_toast: ^3.0.5
   rxdart: ^0.24.0
   flustars: ^0.3.3
@@ -43,24 +43,24 @@ dependencies:
 #      url: git://github.com/theyakka/fluro.git
   #网页中唤醒原生app页面
   uni_links: ^0.2.0
-  fluro: ^2.0.3 #ios android web
+  fluro: ^2.0.3 #ios_ android web
   auto_size:
     git:
       url: git://github.com/flutterchina/auto_size.git
-  connectivity: ^0.4.9 #ios android web
+  connectivity: ^0.4.9 #ios_ android web
   dio: ^3.0.9 #all
-#  dio_http_cache: ^0.2.8 # ios android
+#  dio_http_cache: ^0.2.8 # ios_ android
   json_serializable: ^3.3.0
   pretty_dio_logger: ^1.1.1
   #https://pub.dev/packages/pull_to_refresh#-readme-tab-
   #pull_to_refresh: ^1.5.7 used in ones_mobile
-  flutter_easyrefresh: ^2.1.1 #android ios web
+  flutter_easyrefresh: ^2.1.1 #android ios_ web
   #https://pub.dev/packages/cached_network_image#-installing-tab-
-  cached_network_image: ^2.3.1 #ios android web
+  cached_network_image: ^2.3.1 #ios_ android web
   #https://github.com/zino-app/graphql-flutter
-#  graphql_flutter: ^2.0.0 #android ios
+#  graphql_flutter: ^2.0.0 #android ios_
   #键盘弹起和隐藏
-  flutter_keyboard_visibility: ^4.0.0  # android ios web
+  flutter_keyboard_visibility: ^4.0.0  # android ios_ web
   retrofit: ^1.3.4
   logger: ^0.9.1
   # 状态管理 bloc

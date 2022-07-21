@@ -143,7 +143,7 @@ jobs:
           APPLE_AUTH_P8_BASE64_KEY: ${{ secrets.APPLE_AUTH_P8_BASE64_KEY }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           BUILD_REVISION: ${{ steps.CURRENT_TAG_OR_TAG.outputs.BUILD_REVISION }}
-        run: sh ./ios/build.sh
+        run: sh ./ios_/build.sh
       - name: Upload artifact to Actions
         if: ${{ startsWith(steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_BRANCH, 'F') }}
         uses: actions/upload-artifact@v2

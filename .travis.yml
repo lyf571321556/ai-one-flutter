@@ -84,7 +84,7 @@ jobs:
       file: $APK_OUTPUT
       on:
         tags: true
-  - stage: deploy-ios
+  - stage: deploy-ios_
     os: osx
     language: objective-c
     osx_image: xcode11.2
@@ -94,16 +94,16 @@ jobs:
     - brew update
     - brew install libimobiledevice
     - brew install ideviceinstaller
-    - brew install ios-deploy
+    - brew install ios_-deploy
     - git clone https://github.com/flutter/flutter.git -b master --depth 50
     script:
     - "./flutter/bin/flutter upgrade"
     - gem install cocoapods
     - pod setup
-    - "./flutter/bin/flutter -v build ios --release --no-codesign"
+    - "./flutter/bin/flutter -v build ios_ --release --no-codesign"
     - mkdir Runner
     - mkdir Runner/Payload
-    - cp -r build/ios/iphoneos/Runner.app Runner/Payload/Runner.app
+    - cp -r build/ios_/iphoneos/Runner.app Runner/Payload/Runner.app
     - cd Runner
     - zip -r Runner.ipa Payload
     deploy:
