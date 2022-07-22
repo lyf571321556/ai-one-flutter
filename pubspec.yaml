@@ -14,7 +14,7 @@ description: ones ai Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.16.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -38,9 +38,9 @@ dependencies:
   bot_toast: ^4.0.3
   rxdart: ^0.24.0
   flustars: ^0.3.3
-#  fluro:
-#    git:
-#      url: git://github.com/theyakka/fluro.git
+  #  fluro:
+  #    git:
+  #      url: git://github.com/theyakka/fluro.git
   #网页中唤醒原生app页面
   uni_links: ^0.5.1
   fluro: ^2.0.3 #ios_ android web
@@ -49,7 +49,7 @@ dependencies:
       url: https://github.com/flutterchina/auto_size.git
   connectivity_plus: ^2.3.6 #ios_ android web
   dio: ^3.0.9 #all
-#  dio_http_cache: ^0.2.8 # ios_ android
+  #  dio_http_cache: ^0.2.8 # ios_ android
   json_serializable: ^3.3.0
   pretty_dio_logger: ^1.1.1
   #https://pub.dev/packages/pull_to_refresh#-readme-tab-
@@ -58,7 +58,7 @@ dependencies:
   #https://pub.dev/packages/cached_network_image#-installing-tab-
   cached_network_image: ^2.3.1 #ios_ android web
   #https://github.com/zino-app/graphql-flutter
-#  graphql_flutter: ^2.0.0 #android ios_
+  #  graphql_flutter: ^2.0.0 #android ios_
   #键盘弹起和隐藏
   flutter_keyboard_visibility: ^5.3.0  # android ios_ web
   retrofit: ^1.3.4
@@ -67,21 +67,22 @@ dependencies:
   bloc: ^4.0.0
   flutter_bloc: ^4.0.0
   # Database for mobile and Desktop
-  moor: ^4.2.1
-#  moor_ffi: ^0.8.0
+  drift: ^1.6.0
+  sqlite3_flutter_libs: ^0.5.0
+  #  moor_ffi: ^0.8.0
   # Helper to find the database path on mobile
-  path_provider: ^2.0.11
-  path: ^1.7.0
+  path_provider: ^2.0.0
+  path: ^1.8.0
 dev_dependencies:
   # databse moor
-#  moor_generator: ^3.1.0
   #  json_model: #latest version
-  build_runner: ^1.6.7 # use the latest version
+  drift_dev: ^1.5.0
+  build_runner: ^2.1.11 # use the latest version
   #  json_serializable: ^3.3.0
-#  retrofit_generator: # use the latest version
+  #  retrofit_generator: # use the latest version
   build_web_compilers: ^2.3.0
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
 
 
 
