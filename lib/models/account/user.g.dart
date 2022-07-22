@@ -32,5 +32,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'channel': instance.channel,
       'FirstPinYin': instance.FirstPinYin,
       'status': instance.status,
-      'namePinyin': instance.namePinyin
+      'namePinyin': instance.namePinyin,
     };
