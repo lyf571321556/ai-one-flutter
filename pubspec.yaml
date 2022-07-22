@@ -35,7 +35,7 @@ dependencies:
   localstorage: ^4.0.0+1
   webview_flutter: ^0.3.22+1 #ios_ android
   url_launcher: ^6.1.5 # ios_ android web
-  bot_toast: ^3.0.5
+  bot_toast: ^4.0.3
   rxdart: ^0.24.0
   flustars: ^0.3.3
 #  fluro:
