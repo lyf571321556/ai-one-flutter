@@ -37,9 +37,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final TextEditingController _accountController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   static bool _showPlaintext = true,
-      _autoValied = false,
       _userNameValied = false,
       _passwordValied = false;
+  AutovalidateMode _autoValied = AutovalidateMode.always;
+
   LoginState _loginState = LoginState.LOGIN_DEFAULT;
 
   static String _userName, _password;
@@ -155,7 +156,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               SizedBox(height: _userNameValied ? 10 : 10),
                               _buildPasswordTextField(),
                               _buildForgetPasswordWidget(),
-                              _buildAccountOrPswInputBox(false,"样式对比输入框")
+                              _buildAccountOrPswInputBox(false, "样式对比输入框")
                             ],
                           ),
                         ),
@@ -180,28 +181,28 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   //输入框样式
   Widget _buildAccountOrPswInputBox(bool obscureText, String hintText) {
     return TextField(
-        textAlign: TextAlign.left,
-        style:
-        TextStyle(fontSize: 20, color: Colors.black),
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 6),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor, width: 1.0)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor.withOpacity(0.5), width: 1.0)),
+      textAlign: TextAlign.left,
+      style: TextStyle(fontSize: 20, color: Colors.black),
+      obscureText: obscureText,
+      decoration: InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor, width: 1.0)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor.withOpacity(0.5),
+                  width: 1.0)),
 //                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4.0)),borderSide: BorderSide(color: OnesColors.LoginPageTitleBackGround, width: 1.0)),
-            hintText: hintText,
-            hintStyle: TextStyle(
-                fontSize: 14, color: Theme.of(context).primaryColor)),
-      );
+          hintText: hintText,
+          hintStyle:
+              TextStyle(fontSize: 14, color: Theme.of(context).primaryColor)),
+    );
   }
-  
+
   Widget _buildAccountTextField() {
     return TextFormField(
       onSaved: (String value) {
@@ -214,7 +215,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         fontSize: 18,
       ),
       autofocus: false,
-      autovalidate: _autoValied,
+      autovalidateMode: _autoValied,
       controller: _accountController,
       decoration: InputDecoration(
           border: UnderlineInputBorder(
@@ -259,7 +260,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           fontSize: 18,
         ),
         autofocus: false,
-        autovalidate: _autoValied,
+        autovalidateMode: _autoValied,
         controller: _passwordController,
         obscureText: _showPlaintext,
         decoration: InputDecoration(
@@ -300,7 +301,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       alignment: Alignment.centerRight,
       child: InkWell(
         onTap: () {
-          BotToast.showText(text: "to do!",duration: Duration(seconds: 5),onlyOne: true,crossPage: true,contentColor: Colors.red);
+          BotToast.showText(
+              text: "to do!",
+              duration: Duration(seconds: 5),
+              onlyOne: true,
+              crossPage: true,
+              contentColor: Colors.red);
         },
         child: Text(
           IntlUtil.getString(
@@ -353,7 +359,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(8),
                             onPressed: () async {
                               FocusScope.of(context).requestFocus(FocusNode());
-                              _autoValied = true;
+                              _autoValied = AutovalidateMode.always;
                               if (!_formKey.currentState.validate()) {
                               } else {
                                 await _loginAanimationController

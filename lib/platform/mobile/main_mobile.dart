@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:ones_ai_flutter/common/dao/user_dao.dart';
 import 'package:ones_ai_flutter/models/account/user.dart';
 import 'package:redux/redux.dart';

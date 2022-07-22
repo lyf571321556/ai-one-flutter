@@ -1,0 +1,253 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+setup_travis
+
+# --- Const ---
+$repository_name = 'lyf571321556/ai_one_flutter'
+
+$signing_identity_ones_distribution = 'iPhone Distribution: BangWork Inc. (9UFLGY6SJS)'
+$app_identifier = 'ai.ones.project.mobile'
+$provisioning_name_adhoc = 'ONES.AI Project Mobile Ad Hoc'
+$provisioning_name_distribution = 'ONES.AI Project Mobile Distribution'
+
+
+$match_type_adhoc = 'adhoc'
+$match_type_appstore = 'appstore'
+
+$gym_scheme = 'Runner'
+$gym_workspace = 'Runner.xcworkspace'
+
+$gym_config_beta = 'Release-Beta'
+$gym_config_release = 'Release'
+
+$adhoc_app_identifier = 'ai.ones.project.ios.preview'
+$appstore_app_identifier = 'ai.ones.project.ios'
+
+$env_key_mobile_root = 'GITHUB_WORKSPACE'
+$env_current_branch = 'CURRENT_BRANCH'
+$env_current_tag = 'CURRENT_TAG'
+$env_key_current_commit = 'CURRENT_COMMIT'
+$env_key_current_branch = 'CURRENT_BRANCH'
+$env_key_github_token = 'GITHUB_OAUTH_TOKEN'
+$env_key_leancloud_appid = 'LEANCLOUD_APP_ID'
+$env_key_leancloud_appkey = 'LEANCLOUD_APP_KEY'
+$env_key_fabric_api_token = 'FABRIC_API_TOKEN'
+$env_key_fabric_build_secret = 'FABRIC_BUILD_SECRET'
+# match证书管理用到的auth key，格式为Base64.encode64("<Github username>:<Github Personal Access Token>")
+$env_key_fastlane_match_basic_auth = 'MATCH_GIT_BASIC_AUTHORIZATION'
+# fastlane打包上传ipa到app-store-connect需要使用最新授权方式(https://docs.fastlane.tools/app-store-connect-api/)
+$env_key_fastlane_apple_auth_json_key = 'APPLE_AUTH_JSON_KEY'
+$env_key_fastlane_apple_auth_p8_key = 'APPLE_AUTH_P8_KEY'
+$env_key_fastlane_apple_auth_p8_base64_key = 'APPLE_AUTH_P8_BASE64_KEY'
+
+$path_dir_build = ENV[$env_key_mobile_root]
+$current_branch = ENV[$env_current_branch]
+$current_tag = ENV[$env_current_tag]
+
+$filename_ipa_default = 'ones_mobile.ipa'
+$filename_beta_ipa_copy = 'ones-ai-mobile-'+$current_branch+'.ipa'
+$filename_release_ipa_copy = 'ones-ai-mobile-'+$current_tag+'.ipa'
+$filename_apple_auth = 'apple_auth.json'
+$filename_apple_auth_p8 = 'apple_auth.p8'
+
+$path_dir_ios = File.join($path_dir_build, 'ios') # {build Dir}/ios
+$path_dir_fastlane = File.join($path_dir_ios, 'fastlane') # {build Dir}/ios/fastlane
+$path_dir_fastlane_ipas = File.join($path_dir_fastlane, 'ipas') # {build Dir}/ios/fastlane/ipas
+$path_dir_fastlane_profiles = File.join($path_dir_fastlane, 'profiles') # {build Dir}/ios/fastlane/profiles
+$path_file_ipa_default = File.join($path_dir_fastlane_ipas, $filename_ipa_default) # {build Dir}/ios/fastlane/ipas/{filename_ipa_default}
+$path_file_beta_ipa_copy = File.join($path_dir_build, $filename_beta_ipa_copy) # {build Dir}/ios/fastlane/ipas/{filename_ipa_default}
+$path_file_release_ipa_copy = File.join($path_dir_build, $filename_release_ipa_copy) # {build Dir}/ios/fastlane/ipas/{filename_ipa_default}
+$path_file_apple_auth_json = File.join($path_dir_ios, $filename_apple_auth) # {build Dir}/ios/$filename_apple_auth
+$path_file_apple_auth_p8 = File.join($path_dir_ios, $filename_apple_auth_p8) # {build Dir}/ios/$filename_apple_auth_p8
+# --- Lanes ---
+platform :ios do
+  before_all do
+    print_header '🏁 Before All'
+    xcversion(version: '12.2') # Selects Xcode
+  end
+
+  desc "Build & Deliver to Crashlytics Beta"
+  lane :beta do
+    build_number = number_of_commits()
+    print_log "Build Commits #{build_number}"
+    Dir.chdir "../.." do
+        build_name = $current_branch
+        if build_name.nil?
+            build_name = $current_tag
+        end
+        print_log "Build Name #{build_name}"
+        # "--verbose",
+        # 构建flutter代码和资源，必须自定义一个new_scheme,以及对应的build configuration（Release-new_scheme_name）,不然会报错(The Xcode project does not define custom schemes. You cannot use the --flavor option.)
+        sh("flutter", "build", "ios", "--no-tree-shake-icons", "--no-codesign", "--release", "--flavor", "Beta", "-t", "lib/main.dart", "--dart-define=username=wuxingjuan@ones.ai", "--dart-define=password=juan1997", "--dart-define=isdev=true", "--dart-define=projectServerUrl=https://devapi.myones.net/project/F8032", "--dart-define=wikiServerUrl=https://dev.myones.net/wiki/F8032", "--build-number=#{build_number}", "--build-name=#{build_name}")
+    end
+    #需要提供MATCH_GIT_BASIC_AUTHORIZATION(格式为Base64.encode64("<Github username>:<Github Personal Access Token>"))供match命令下载证书使用(https://github.com/settings/tokens/new)
+    #需要提供MATCH_PASSWORD供match命令解密证书使用
+    match(type: $match_type_adhoc,app_identifier:$adhoc_app_identifier)
+    increment_build_number(build_number: number_of_commits)
+    gym(
+      scheme: $gym_scheme,
+      workspace: $gym_workspace,
+      configuration: $gym_config_beta,
+      output_directory: $path_dir_fastlane_ipas,
+      output_name: $filename_ipa_default,
+    )
+    sh('cp',$path_file_ipa_default,$path_file_beta_ipa_copy)
+    log = changelog_from_git_commits(
+      pretty: '- %s (%cn)',
+      include_merges: false
+    )
+    appcenter_upload(
+      release_notes:log,
+      file:$path_file_ipa_default,
+      notify_testers:true,
+      api_token:ENV['APPCENTER_API_TOKEN_IOS'],
+      app_name:ENV['APPCENTER_APP_NAME_IOS'],
+      owner_name:ENV['APPCENTER_OWNER_NAME']
+     )
+    #pgyer(api_key: ENV['PGY_API_KEY'] , user_key:ENV['PGY_USER_KEY'],update_description:log)
+  end
+
+  desc "Build & Deliver to App Store Connect"
+  lane :release do
+    build_number = number_of_commits()
+    print_log "Build Commits #{build_number}"
+    Dir.chdir "../.." do
+        # "--verbose",
+        # 构建flutter代码和资源，必须自定义一个new_scheme,以及对应的build configuration（Release-new_scheme_name）,不然会报错(The Xcode project does not define custom schemes. You cannot use the --flavor option.)
+        sh("flutter", "build", "ios", "--no-tree-shake-icons", "--no-codesign", "--release", "--flavor", "Beta", "-t", "lib/main.dart", "--build-number=#{build_number}", "--build-name=#{ENV[$env_current_tag]}")
+    end
+    #需要提供MATCH_GIT_BASIC_AUTHORIZATION(格式为Base64.encode64("<Github username>:<Github Personal Access Token>"))供match命令下载证书使用(https://github.com/settings/tokens/new)
+    #需要提供MATCH_PASSWORD供match命令解密证书使用
+    match(type: $match_type_appstore,app_identifier:$appstore_app_identifier)
+    short_version = ENV[$env_current_tag]
+    if match = short_version.match(/^v(\d+\.\d+\.\d+)$/)
+        should_pilot = true
+        short_version = match.captures[0]
+    else
+        should_pilot = false
+        if match = short_version.match(/^v(\d+\.\d+\.\d+)/)
+            short_version = match.captures[0]
+        end
+    end
+    set_bundle_short_version('./Runner/Info.plist', short_version)
+    increment_build_number(build_number: number_of_commits)
+    gym(
+      scheme: $gym_scheme,
+      workspace: $gym_workspace,
+      configuration: $gym_config_release,
+      output_directory: $path_dir_fastlane_ipas,
+      output_name: $filename_ipa_default,
+    )
+    sh('cp',$path_file_ipa_default,$path_file_release_ipa_copy)
+    # log = changelog_from_git_commits(
+    #  pretty: '- %s (%cn)',
+    #  include_merges: false
+    # )
+    if should_pilot
+        File.open($path_file_apple_auth_json, "w") do |file|
+            file.write(JSON.pretty_generate("#{ENV[$env_key_fastlane_apple_auth_json_key]}").gsub('\n', '\\n'))
+        end
+        Dir.chdir($path_dir_ios) do
+            sh('ls -lh')
+            sh('cat',$path_file_apple_auth_json)
+        end
+        File.open($path_file_apple_auth_p8, "w") do |file|
+            file.write(JSON.pretty_generate("#{ENV[$env_key_fastlane_apple_auth_p8_key]}".gsub('\n', '\\n')))
+        end
+        Dir.chdir($path_dir_ios) do
+            sh('ls -lh')
+            sh('cat',$path_file_apple_auth_p8)
+        end
+        # key_filepath: $path_file_apple_auth_p8,
+        api_key = app_store_connect_api_key(
+            key_id: "YU2873TJJ5",
+            issuer_id: "69a6de89-d0ae-47e3-e053-5b8c7c11a4d1",
+            # 使用p8文件原始内容进行授权方式
+            key_content: "#{ENV[$env_key_fastlane_apple_auth_p8_key]}",
+            is_key_content_base64: false,
+            # 使用p8文件原始内容的base64字符串进行授权方式
+            # key_content: "#{ENV[$env_key_fastlane_apple_auth_p8_base64_key]}",
+            # is_key_content_base64: true,
+            duration: 1200,
+            in_house: false
+        )
+        # api_key_path: $path_file_apple_auth_json
+        pilot(
+            skip_submission: true,
+            skip_waiting_for_build_processing: true,
+            api_key: api_key
+        )
+    end
+    # set_github_release(
+    #   repository_name: $repository_name,
+    #   api_token: ENV[$env_key_github_token],
+    #   name: ENV[$env_key_current_branch],
+    #   tag_name: ENV[$env_key_current_branch],
+    #   description: log,
+    #   commitish: 'master',
+    #   upload_assets: [$path_file_ipa_default],
+    # )
+  end
+
+  desc "[TEMP] Build & Deliver to Crashlytics Beta"
+  lane :__temp_crashlytics do
+    crashlytics(
+      api_token: ENV[$env_key_fabric_api_token],
+      build_secret: ENV[$env_key_fabric_build_secret],
+      groups: ['ones.ai'],
+      ipa_path: $path_file_ipa_default,
+    )
+  end
+
+  lane :__temp do
+    print_log 'hi'
+  end
+end
+
+
+
+# --- Prints ---
+def print_title_log(title, content)
+  UI.message '📠 ' + title.to_s + ':'
+  print_log content
+end
+
+def print_log(content)
+  UI.message '📠 ' + content.to_s
+end
+
+def print_dir(path)
+  UI.message '📂📂📂 Print Dir 📂📂📂'
+  Dir.chdir(path) do
+      sh('ls -lh')
+  end
+end
+
+def print_header header
+  UI.message "~~~~~~~~~~~~~~~~~~~~~~"
+  UI.message '📍 ' + header.to_s
+  UI.message "~~~~~~~~~~~~~~~~~~~~~~"
+end
+
+# --- Methods ---
+def set_bundle_short_version(plist_path, version_string)
+  print_header "Set Bundle short version"
+  print_log plist_path
+  print_log version_string
+  set_info_plist_value(path: plist_path, key: 'CFBundleShortVersionString', value: version_string)
+end
