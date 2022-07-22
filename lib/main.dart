@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:auto_size/auto_size.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 //import 'package:bot_toast/bot_toast.dart';
@@ -30,7 +29,7 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
     initByPlatform();
     ErrorWidget.builder = (FlutterErrorDetails details) {
-      Zone.current.handleUncaughtError(details.exception, details.stack);
+      Zone.current.handleUncaughtError(details.exception, details.stack!);
       return Container(color: Colors.transparent);
     };
 //    WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +51,7 @@ void initPlatformStateForUniLinks() async {
   print("request coming");
   String url = await getCurrentRequestUrl();
   print(url);
-  AppRouteMatch appRouteMatch =
+  AppRouteMatch? appRouteMatch =
       PageRouteManager.pageRouter.match(getCurrentRequestUrlPath());
   print(appRouteMatch?.parameters);
   if (appRouteMatch != null) {
@@ -71,7 +70,8 @@ class OnesApp extends StatefulWidget {
 
 class OnesAppState extends State<OnesApp> {
   var _buildDataFuture;
-  final Store onesStore = new Store<OnesGlobalState>(createOnesAppReducer,
+  final Store<OnesGlobalState> onesStore = new Store<OnesGlobalState>(
+      createOnesAppReducer,
       middleware: onesMiddlewares,
       initialState: new OnesGlobalState(
           themeData: ThemeData.light().copyWith(
@@ -117,9 +117,9 @@ class OnesAppState extends State<OnesApp> {
     );
   }
 
-  Route<dynamic> generateRoute(RouteSettings routeSettings){
+  Route<dynamic>? generateRoute(RouteSettings routeSettings) {
 //    print('Incoming Route Setting\n- Name: ${routeSettings.name}\n- Param: ${routeSettings.arguments}\n- isInitial: ${routeSettings.isInitialRoute}\n\n');
-   return PageRouteManager.pageRouter.generator(routeSettings);
+    return PageRouteManager.pageRouter.generator(routeSettings);
   }
 
   Widget _buildWidgetBuilder(BuildContext context, AsyncSnapshot snapshot) {
@@ -186,6 +186,6 @@ class OnesAppState extends State<OnesApp> {
   }
 
   Widget _getHomePage(bool isLogin) {
-    return isLogin ? HomePage() : LoginPage();//WebViewPage(); //
+    return isLogin ? HomePage() : LoginPage(); //WebViewPage(); //
   }
 }

@@ -14,9 +14,9 @@ abstract class BlocListBase {
 
 class BlocListProviderWidget<T extends BlocListBase> extends StatefulWidget {
   BlocListProviderWidget({
-    Key key,
-    @required this.child,
-    @required this.bloc,
+    required Key key,
+    required this.child,
+    required this.bloc,
     this.userDispose: true,
   }) : super(key: key);
 
