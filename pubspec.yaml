@@ -48,9 +48,9 @@ dependencies:
     git:
       url: https://github.com/flutterchina/auto_size.git
   connectivity_plus: ^2.3.6 #ios_ android web
-  dio: ^3.0.9 #all
+  dio: ^4.0.6 #all
   #  dio_http_cache: ^0.2.8 # ios_ android
-  json_serializable: ^3.3.0
+  json_serializable: ^6.3.1
   pretty_dio_logger: ^1.1.1
   #https://pub.dev/packages/pull_to_refresh#-readme-tab-
   #pull_to_refresh: ^1.5.7 used in ones_mobile
@@ -61,7 +61,7 @@ dependencies:
   #  graphql_flutter: ^2.0.0 #android ios_
   #键盘弹起和隐藏
   flutter_keyboard_visibility: ^5.3.0  # android ios_ web
-  retrofit: ^1.3.4
+  retrofit: ^3.0.1+1
   logger: ^0.9.1
   # 状态管理 bloc
   bloc: ^4.0.0
@@ -77,10 +77,10 @@ dev_dependencies:
   # databse moor
   #  json_model: #latest version
   drift_dev: ^1.5.0
-  build_runner: ^2.1.11 # use the latest version
+  build_runner: ^2.2.0 # use the latest version
   #  json_serializable: ^3.3.0
   #  retrofit_generator: # use the latest version
-  build_web_compilers: ^2.3.0
+  build_web_compilers: ^3.2.4
 #  flutter_test:
 #    sdk: flutter
 
