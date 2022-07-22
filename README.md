@@ -1,6 +1,6 @@
-# ones_ai_flutter
+# ai_one_flutter
 
-ones ai Flutter project.
+ai one Flutter project.
 
 ## Getting Started
 
