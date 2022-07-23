@@ -6,17 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:ones_ai_flutter/common/bloc/bloc_widget.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/ui/drawers/main_left_page.dart';
 import 'package:ones_ai_flutter/ui/pages/dashboard/list/dashboard_page.dart';
 import 'package:ones_ai_flutter/ui/pages/notification/list/notification_list_page.dart';
-import 'package:ones_ai_flutter/ui/pages/project/list/list_project_bloc.dart';
 import 'package:ones_ai_flutter/ui/pages/project/list/list_project_page.dart';
-import 'package:ones_ai_flutter/ui/pages/project/list/project_list_bloc.dart';
-import 'package:ones_ai_flutter/ui/pages/project/list/project_list_page.dart';
 import 'package:ones_ai_flutter/ui/pages/wiki/list/wiki_list_page.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
 
@@ -46,8 +42,8 @@ final List<_ChildPage> _allChildPages = <_ChildPage>[
 
 class _HomePageContentState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  DateTime _lastPressedAt;
-  TabController _tabController;
+  DateTime? _lastPressedAt;
+  TabController? _tabController;
   GlobalKey<_NavigationBarState> _NavigationBarStateKey = GlobalKey();
   GlobalKey<_TitleBarWidgetState> _TitleBarWidgetStateKey = GlobalKey();
 
@@ -57,17 +53,17 @@ class _HomePageContentState extends State<HomePage>
     super.initState();
     _tabController =
         new TabController(vsync: this, length: _allChildPages.length);
-    _tabController.addListener(() {
-      _NavigationBarStateKey.currentState.changeTo(_tabController.index);
-      _TitleBarWidgetStateKey.currentState.ssetTitle(IntlUtil.getString(
-          context, _allChildPages[_tabController.index].labelId));
+    _tabController!.addListener(() {
+      _NavigationBarStateKey.currentState?.changeTo(_tabController!.index);
+      _TitleBarWidgetStateKey.currentState?.ssetTitle(IntlUtil.getString(
+          context, _allChildPages[_tabController!.index].labelId));
     });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
@@ -75,7 +71,7 @@ class _HomePageContentState extends State<HomePage>
   Widget build(BuildContext context) {
     // TODO: implement build
     String avatar =
-        StoreProvider.of<OnesGlobalState>(context).state.user?.avatar;
+        StoreProvider.of<OnesGlobalState>(context).state.user?.avatar ?? "";
     return WillPopScope(
       onWillPop: () async {
         if (Scaffold.of(context).isDrawerOpen) {
@@ -83,7 +79,7 @@ class _HomePageContentState extends State<HomePage>
           return false;
         }
         if (_lastPressedAt == null ||
-            DateTime.now().difference(_lastPressedAt) > Duration(seconds: 1)) {
+            DateTime.now().difference(_lastPressedAt!) > Duration(seconds: 1)) {
           _lastPressedAt = DateTime.now();
 //          BotToast.showText(
 //              text: IntlUtil.getString(context, Strings.exitApp),
@@ -137,7 +133,7 @@ class _HomePageContentState extends State<HomePage>
               title: TitleBarWidget(
                 key: _TitleBarWidgetStateKey,
                 title: IntlUtil.getString(
-                    context, _allChildPages[_tabController.index].labelId),
+                    context, _allChildPages[_tabController!.index].labelId),
               ),
 //                title: NavigationBarWidget(_tabController),
               centerTitle: false,
@@ -147,12 +143,12 @@ class _HomePageContentState extends State<HomePage>
             ),
             preferredSize: Size(double.infinity, 55),
           ),
-          body: TabContentViewWidget(_tabController),
+          body: TabContentViewWidget(tabController: _tabController!),
           drawer: new Drawer(
             child: MainLeftMenuPage(),
           ),
           bottomNavigationBar: NavigationBarWidget(
-            _tabController,
+            _tabController!,
             key: _NavigationBarStateKey,
           ),
         ),
@@ -162,9 +158,9 @@ class _HomePageContentState extends State<HomePage>
 }
 
 class TitleBarWidget extends StatefulWidget {
-  final String title;
+  final String? title;
 
-  TitleBarWidget({Key key, this.title}) : super(key: key);
+  TitleBarWidget({required Key key, this.title}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -174,7 +170,7 @@ class TitleBarWidget extends StatefulWidget {
 }
 
 class _TitleBarWidgetState extends State<TitleBarWidget> {
-  String _title;
+  String? _title;
 
   _TitleBarWidgetState(this._title) : super();
 
@@ -196,7 +192,7 @@ class _TitleBarWidgetState extends State<TitleBarWidget> {
       //MediaQuery.of(context).size.height * 0.007
       alignment: Alignment.centerLeft,
       child: Text(
-        _title,
+        _title ?? "",
         style: TextStyle(color: Colors.white),
       ), //IntlUtil.getString(context, Strings.home_title)
     );
@@ -206,7 +202,8 @@ class _TitleBarWidgetState extends State<TitleBarWidget> {
 class NavigationBarWidget extends StatefulWidget {
   TabController _tabController;
 
-  NavigationBarWidget(this._tabController, {Key key}) : super(key: key);
+  NavigationBarWidget(this._tabController, {required Key key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -284,24 +281,15 @@ class _NavigationBarState extends State<NavigationBarWidget> {
 }
 
 class TabContentViewWidget extends StatelessWidget {
-  TabController _tabController;
+  TabController? tabController;
 
-  TabContentViewWidget(this._tabController, {Key key}) : super(key: key);
+  TabContentViewWidget({Key? key, this.tabController}) : super(key: key);
 
   Widget buildTabView(BuildContext context, _ChildPage page) {
     String labelId = page.labelId;
     switch (labelId) {
       case Strings.titleProject:
-//        return BlocListProviderWidget(
-//          bloc: ProjectListBloc(),
-//          child: ProjectListPage(),
-//        );
-        return BlocProvider(
-          create: (context) {
-            return ListProjectBloc();
-          },
-          child: ListProjectPage(),
-        );
+        return ListProjectPage();
         break;
       case Strings.titleWiki:
         return WikiListPage();
@@ -328,7 +316,7 @@ class TabContentViewWidget extends StatelessWidget {
 //      index: _currentIndex,
 //    );
     return new TabBarView(
-        controller: _tabController,
+        controller: tabController,
         children: _allChildPages.map((_ChildPage page) {
           return buildTabView(context, page);
         }).toList());
@@ -338,7 +326,7 @@ class TabContentViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new TabBarView(
-        controller: _tabController,
+        controller: tabController,
         children: _allChildPages.map((_ChildPage page) {
           return buildTabView(context, page);
         }).toList());

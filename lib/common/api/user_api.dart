@@ -9,7 +9,7 @@ class UserApi {
   static final String LOGIN_URL = "project/master/auth/login";
 
   static Future<HttpResult> login(
-      String userName, String password, CancelToken token) async {
+      String userName, String password, CancelToken? token) async {
     Map<String, dynamic> bodyParams = {
       "password": password,
       "email": userName,

@@ -1,16 +1,18 @@
 import 'package:dio/dio.dart';
 
 class TokenInterceptor extends InterceptorsWrapper {
-  String _userId, _token;
+  String? _userId, _token;
 
   @override
-  onRequest(RequestOptions options) async {
+  @override
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers["Ones-User-Id"] = _userId;
     options.headers["Ones-Auth-Token"] = _token;
     options.headers["Access-Control-Allow-Origin"] = "*";
     options.headers["content-type"] = "application/json";
     options.contentType = "application/json";
-    return options;
+    super.onRequest(options, handler);
   }
 
 //
@@ -30,8 +32,8 @@ class TokenInterceptor extends InterceptorsWrapper {
 
   ///清除授权
   void clearAuthorization() {
-    this._userId = null;
-    this._token = null;
+    this._userId = "";
+    this._token = "";
   }
 
   TokenInterceptor withUserId(String userId) {

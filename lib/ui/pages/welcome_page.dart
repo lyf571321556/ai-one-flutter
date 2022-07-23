@@ -11,7 +11,7 @@ import 'package:ones_ai_flutter/utils/navigator_utils.dart';
 import 'package:ones_ai_flutter/ui/pages/home_page.dart';
 
 class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key, this.title}) : super(key: key);
+  WelcomePage({Key? key, this.title}) : super(key: key);
 
   // This widget is the main page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -22,7 +22,7 @@ class WelcomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final String? title;
 
   @override
   _WelcomePageState createState() => _WelcomePageState();

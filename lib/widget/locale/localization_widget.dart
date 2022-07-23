@@ -6,7 +6,7 @@ import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 class LocalizationsWidget extends StatefulWidget {
   final Widget child;
 
-  LocalizationsWidget({Key key, this.child}) : super(key: key);
+  LocalizationsWidget({Key? key, required this.child}) : super(key: key);
 
   @override
   State<LocalizationsWidget> createState() {

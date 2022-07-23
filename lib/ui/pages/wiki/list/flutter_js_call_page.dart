@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
@@ -60,8 +59,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 //  }
 //}
 
-
-
 class WebViewPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -74,7 +71,7 @@ class WebViewPageState extends State<WebViewPage> {
     return JavascriptChannel(
         name: 'Toast',
         onMessageReceived: (JavascriptMessage message) {
-          print("Toast调用消息哈哈哈:"+message.message);
+          print("Toast调用消息哈哈哈:" + message.message);
         });
   }
 
@@ -82,12 +79,12 @@ class WebViewPageState extends State<WebViewPage> {
     return JavascriptChannel(
         name: 'onEditorRendered',
         onMessageReceived: (JavascriptMessage message) {
-          print("onEditorRendered调用消息哈哈哈:"+message.message);
+          print("onEditorRendered调用消息哈哈哈:" + message.message);
         });
   }
 
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +94,8 @@ class WebViewPageState extends State<WebViewPage> {
       ),
       body: Builder(builder: (BuildContext context) {
         return WebView(
-          initialUrl: 'http://192.168.1.213:8080/',//加载assets/html/js_flutter_call_each_other.html资源测试flutter和js互相调用
+          initialUrl:
+              'http://192.168.1.213:8080/', //加载assets/html/js_flutter_call_each_other.html资源测试flutter和js互相调用
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
 //            _controller = webViewController;

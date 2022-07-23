@@ -19,10 +19,10 @@ class LanguageSelectPage extends StatefulWidget {
 }
 
 class _LanguageSelectPageState extends State<LanguageSelectPage> {
-  List<LanguageModel> _Languagelist = new List();
+  List<LanguageModel> _Languagelist = [];
 
   @override
-  Future initState() {
+  void initState() {
     // TODO: implement initState
     super.initState();
     _Languagelist.add(LanguageModel(Strings.languageAuto, '', ''));
@@ -75,8 +75,8 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
                   : IntlUtil.getString(context, languageModel.titleId,
                       languageCode: 'zh', countryCode: 'CH');
               bool isSelected = (store.state.locale != null &&
-                  store.state.locale.countryCode == languageModel.countryCode &&
-                  store.state.locale.languageCode ==
+                  store.state.locale?.countryCode == languageModel.countryCode &&
+                  store.state.locale?.languageCode ==
                       languageModel.languageCode);
               if (languageModel.titleId == Strings.languageAuto) {
                 isSelected = store.state.locale == null;

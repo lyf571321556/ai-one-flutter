@@ -29,9 +29,8 @@ class PageInfo {
 
 class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
   int currentPageIndex = 0;
-  List<PageInfo> _pageInfo = new List();
-  PageInfo loginOut =
-      PageInfo(Strings.titleHome, Icons.power_settings_new, null);
+  List<PageInfo> _pageInfo = [];
+  PageInfo loginOut = PageInfo(Strings.titleHome, Icons.power_settings_new, "");
   String _userName = "";
 
   @override
@@ -53,7 +52,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
         PageRouteManager.languagePagePath));
     _pageInfo.add(PageInfo(
         Strings.titleTheme, Icons.color_lens, PageRouteManager.themePagePath));
-    _pageInfo.add(PageInfo(Strings.titleLoginOut, Icons.exit_to_app, null));
+    _pageInfo.add(PageInfo(Strings.titleLoginOut, Icons.exit_to_app, ""));
   }
 
   @override
@@ -101,16 +100,18 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                     child: Config.runInWeb
                         ? Image.network(
                             StoreProvider.of<OnesGlobalState>(context)
-                                .state
-                                .user
-                                .avatar,
+                                    .state
+                                    .user
+                                    ?.avatar ??
+                                "",
                             fit: BoxFit.cover,
                           )
                         : CachedNetworkImage(
                             imageUrl: StoreProvider.of<OnesGlobalState>(context)
-                                .state
-                                .user
-                                .avatar,
+                                    .state
+                                    .user
+                                    ?.avatar ??
+                                "",
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -147,7 +148,11 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                   ),
                   SizedBox(height: 3),
                   new Text(
-                    StoreProvider.of<OnesGlobalState>(context).state.user.name,
+                    StoreProvider.of<OnesGlobalState>(context)
+                            .state
+                            .user
+                            ?.name ??
+                        "暂无",
                     style: new TextStyle(color: Colors.white, fontSize: 12.0),
                   ),
                 ],
@@ -195,7 +200,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                   trailing: Icon(Icons.keyboard_arrow_right),
                   title: Text(IntlUtil.getString(context, pageInfo.titleId)),
                   onTap: () async {
-                    if (pageInfo.pagePath == null) {
+                    if (pageInfo.pagePath == "") {
                       await UserDao.saveLoginUserInfo(null, store);
                       PageRouteManager.openNewPage(
                           context, PageRouteManager.loginPagePath,

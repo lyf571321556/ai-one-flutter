@@ -11,12 +11,14 @@ class ErrorInterceptors extends InterceptorsWrapper {
   ErrorInterceptors(this._dio);
 
   @override
-  onRequest(RequestOptions options) async {
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     bool connected = await isConnected();
     if (!connected) {
-      return _dio
-          .resolve(new Response(statusCode: HttpCode.INVALID_NETWORK_CODE));
+      handler.resolve(new Response(
+          statusCode: HttpCode.INVALID_NETWORK_CODE, requestOptions: options));
+      return;
     }
-    return options;
+    super.onRequest(options, handler);
   }
 }

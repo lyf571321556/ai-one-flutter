@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
 
-//import 'package:bot_toast/bot_toast.dart';
 import 'package:fluintl/fluintl.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/foundation.dart';
@@ -15,8 +14,6 @@ import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/ui/pages/home_page.dart';
 import 'package:ones_ai_flutter/ui/pages/login_page.dart';
-import 'package:ones_ai_flutter/ui/pages/welcome_page.dart';
-import 'package:ones_ai_flutter/ui/pages/wiki/list/mobile_web_page.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/platform/web/main_web.dart'
     if (dart.library.io) "package:ones_ai_flutter/platform/mobile/main_mobile.dart";
@@ -146,16 +143,17 @@ class OnesAppState extends State<OnesApp> {
                 CustomLocalizations.delegate
               ],
               localeListResolutionCallback:
-                  (List<Locale> locales, Iterable<Locale> supportedLocales) {
-                if (locales.length <= 0 || store.state.locale != null) {
+                  (List<Locale>? locales, Iterable<Locale> supportedLocales) {
+                if (locales == null && locales!.length <= 0 ||
+                    store.state.locale != null) {
                   return;
                 }
                 if (localizedValues.containsKey(locales[0].languageCode)) {
                   if (store.state.platformLocale == null ||
                       locales[0].languageCode !=
-                          store.state.platformLocale.languageCode ||
+                          store.state.platformLocale?.languageCode ||
                       locales[0].countryCode !=
-                          store.state.platformLocale.countryCode) {
+                          store.state.platformLocale?.countryCode) {
                     store.state.platformLocale = locales[0];
 //                        store.dispatch(ChangeLocaleAction(locales[0]));
                     store.dispatch(ChangePlatformLocaleAction(locales[0]));

@@ -15,7 +15,7 @@ class HttpManager {
   static final int CONNECT_TIMEOUT = 5000;
   static final int WRITE_TIMEOUT = 5000;
   static final int READ_TIMEOUT = 5000;
-  static Dio _httpClient;
+  static Dio? _httpClient;
   static final String web_dev_baseUrl = "http://127.0.0.1:3000/api/";
   static final String mobile_dev_baseUrl = "https://devapi.myones.net/";
   static final String web_release_baseUrl = "http://127.0.0.1:3000/api/";
@@ -24,7 +24,7 @@ class HttpManager {
 
   factory HttpManager() => _sharedInstance();
 
-  static HttpManager _instance;
+  static HttpManager? _instance;
 
   String _getBaseUrl() {
     if (Config.RELEASE) {
@@ -42,7 +42,7 @@ class HttpManager {
     if (_instance == null) {
       _instance = HttpManager._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
   static HttpManager getInstance() => new HttpManager();
@@ -55,12 +55,12 @@ class HttpManager {
         receiveTimeout: READ_TIMEOUT,
         sendTimeout: WRITE_TIMEOUT);
     _httpClient = new Dio(baseOption);
-    _httpClient.interceptors.add(_tokenInterceptors);
+    _httpClient!.interceptors.add(_tokenInterceptors);
     if (!Config.RELEASE) {
-      _httpClient.interceptors
+      _httpClient!.interceptors
           .add(PrettyDioLogger(responseHeader: true, requestBody: true));
     }
-    initProxy(_httpClient);
+    initProxy(_httpClient!);
   }
 
   clearAuthorization() {
@@ -76,7 +76,8 @@ class HttpManager {
   }
 
   Future<HttpResult<dynamic>> get(String url,
-      {Map<String, dynamic> pathParams, CancelToken token}) async {
+      {required Map<String, dynamic> pathParams,
+      required CancelToken token}) async {
     return _request(url,
         httpMethod: HttpMethod.GET, pathParams: pathParams, token: token);
   }
@@ -91,17 +92,17 @@ class HttpManager {
 
   Future<HttpResult> post(String url,
       //FutureOr<T> task(Response value)
-      {Map<String, dynamic> pathParams,
-      Map<String, dynamic> bodyParams,
-      FormData formData,
-      CancelToken token}) async {
+      {Map<String, dynamic> pathParams = const {},
+      Map<String, dynamic> bodyParams = const {},
+      FormData? formData,
+      CancelToken? token}) async {
     assert(bodyParams != null);
     return await _request(url,
         httpMethod: HttpMethod.POST,
         pathParams: pathParams,
         bodyParams: bodyParams,
-        formData: formData,
-        token: token);
+        formData: formData ?? FormData.fromMap({}),
+        token: token ?? CancelToken());
 //            .then((response) {
 //      if (response == null) {
 //        return Future.value(null);
@@ -132,11 +133,11 @@ class HttpManager {
   }
 
   Future<HttpResult> upload(String url,
-      {Map<String, dynamic> pathParams,
-      FormData formData,
-      ProgressCallback onSendprogressCallBack,
-      ProgressCallback onReceiveProgressCallBack,
-      CancelToken token}) async {
+      {Map<String, dynamic> pathParams = const {},
+      required FormData formData,
+      ProgressCallback? onSendprogressCallBack,
+      ProgressCallback? onReceiveProgressCallBack,
+      required CancelToken token}) async {
     assert(formData != null);
     return _request(url,
         httpMethod: HttpMethod.POST,
@@ -149,14 +150,14 @@ class HttpManager {
 
   Future<HttpResult> _request(
     String url, {
-    Options option,
-    HttpMethod httpMethod,
-    Map<String, dynamic> pathParams,
-    Map<String, dynamic> bodyParams,
-    FormData formData,
-    ProgressCallback onSendprogressCallBack,
-    ProgressCallback onReceiveProgressCallBack,
-    CancelToken token,
+    Options? option,
+    required HttpMethod httpMethod,
+    Map<String, dynamic>? pathParams,
+    Map<String, dynamic>? bodyParams,
+    FormData? formData,
+    ProgressCallback? onSendprogressCallBack,
+    ProgressCallback? onReceiveProgressCallBack,
+    required CancelToken token,
   }) async {
     assert(url != null && url.length > 0);
     HttpResult httpResult = new HttpResult();
@@ -170,26 +171,26 @@ class HttpManager {
     HttpResult catchError(DioError e) {
       HttpResult httpResult = new HttpResult();
       if (e.response != null) {
-        httpResult.statusCode = e.response.statusCode;
-        httpResult.statusMessage = e.response.statusMessage;
-        httpResult.data = e.response.data;
+        httpResult.statusCode = e.response?.statusCode;
+        httpResult.statusMessage = e.response?.statusMessage;
+        httpResult.data = e.response?.data;
       }
       switch (e.type) {
-        case DioErrorType.RECEIVE_TIMEOUT:
+        case DioErrorType.receiveTimeout:
           httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
           break;
-        case DioErrorType.CONNECT_TIMEOUT:
+        case DioErrorType.connectTimeout:
           httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
           break;
-        case DioErrorType.SEND_TIMEOUT:
+        case DioErrorType.sendTimeout:
           httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
           break;
-        case DioErrorType.RESPONSE:
+        case DioErrorType.response:
           break;
-        case DioErrorType.CANCEL:
+        case DioErrorType.cancel:
           httpResult.statusCode = HttpCode.CANCEL_ERROR_CODE;
           break;
-        case DioErrorType.DEFAULT:
+        case DioErrorType.other:
           if (e.error != null) {
 //            if (e.error is SocketException) {
 //              httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
@@ -208,7 +209,7 @@ class HttpManager {
     Response response;
     try {
       if (httpMethod == HttpMethod.POST) {
-        response = await _httpClient.post(url,
+        response = await _httpClient!.post(url,
             data: formData ?? bodyParams,
             onSendProgress: onSendprogressCallBack,
             onReceiveProgress: onReceiveProgressCallBack,
@@ -221,7 +222,7 @@ class HttpManager {
 //          //response = catchError(err);
 //        });
       } else {
-        response = await _httpClient.get(
+        response = await _httpClient!.get(
           url,
           cancelToken: token,
           options: Options(method: "GET"),

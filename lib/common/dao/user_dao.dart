@@ -6,6 +6,8 @@ import 'package:ones_ai_flutter/models/account/index.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
 import 'package:redux/redux.dart';
 
+import '../redux/global/ones_state.dart';
+
 ///获取本地登录用户信息
 class UserDao {
   static getUserInfo() async {
@@ -19,7 +21,7 @@ class UserDao {
     }
   }
 
-  static saveLoginUserInfo(User user, Store store) async {
+  static saveLoginUserInfo(User? user, Store<OnesGlobalState> store) async {
     bool result = await LocalDataHelper.put(
         Config.USER_INFO, user == null ? null : json.encode(user.toJson()));
     CommonUtils.changeUser(store, user);

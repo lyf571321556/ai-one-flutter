@@ -7,6 +7,8 @@ import 'package:ones_ai_flutter/models/account/user.dart';
 import 'package:ones_ai_flutter/utils/common_utils.dart';
 import 'package:redux/redux.dart';
 
+import '../../common/redux/global/ones_state.dart';
+
 void initByPlatform() {
   Config.runInWeb = identical(0, 0.0);
 }
@@ -17,7 +19,7 @@ Future<bool> isConnected() async {
 
 void initProxy(Dio _dio) {}
 
-void saveToken(User user, Store store) async {
+Future<void> saveToken(User user, Store<OnesGlobalState> store) async {
   print(user.toJson());
   html.window.document.cookie =
       "uid=${user.uuid};expires=Thu, 18 Dec 2020 12:00:00 UTC";
@@ -49,4 +51,5 @@ String goToDestPage(String url) {
 //  html.window.open("https://dev.myones.net/wiki/master/#/team/YcGYa2G4/space/PmCBHfN2/page/VmtPK2vC", "窗口");
   html.window.location.href =
       "https://dev.myones.net/wiki/master/#/team/YcGYa2G4/space/PmCBHfN2/page/VmtPK2vC";
+  return "";
 }

@@ -16,13 +16,14 @@ class PageRouteManager {
   static final String webViewPath = "/webview/:data";
   static FluroRouter pageRouter = FluroRouter.appRouter;
 
+  static Widget? notSupportPage(
+      BuildContext? context, Map<String, List<String>> params) {
+    return Container();
+  }
+
   static void initRoutes() {
-    if (pageRouter == null) {
-      pageRouter = new FluroRouter();
-    }
-    pageRouter.notFoundHandler = new Handler(
-        handlerFunc:
-            (BuildContext context, Map<String, List<String>> params) {});
+    pageRouter = new FluroRouter();
+    pageRouter.notFoundHandler = new Handler(handlerFunc: notSupportPage);
 
     pageRouter.define(loginPagePath, handler: _loginPageHandler);
     pageRouter.define(homePagePath, handler: _homePageHandler);
@@ -32,40 +33,40 @@ class PageRouteManager {
   }
 
   static final Handler _loginPageHandler = new Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
     print("接收参数${params['param'].first}");
     return LoginPage();
   });
 
   static final Handler _homePageHandler = new Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
     print("接收参数${params['param'].first}");
     return HomePage();
   });
 
   static final Handler _languagePageHandler = new Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
     print("接收参数${params['param'].first}");
     return LanguageSelectPage();
   });
 
   static final Handler _themePageHandler = new Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
     print("接收参数${params['param'].first}");
     return ThemeSelectPage();
   });
 
   static final Handler _webViewPageHandler = new Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
     print("接收参数${params['param'].first}");
     print("接收参数${params['data'].first}");
     return WebViewPage();
   });
 
   static openNewPage(BuildContext context, String pagePath,
-      {Map<String, dynamic> params, bool replace, TransitionType transition}) {
-    assert(pagePath != null);
-    assert(pageRouter != null);
+      {Map<String, dynamic>? params,
+      bool replace = false,
+      TransitionType transition = TransitionType.cupertino}) {
     String query = "";
     if (params != null) {
       params.forEach((key, value) {
@@ -81,7 +82,6 @@ class PageRouteManager {
   }
 
   static closePage(BuildContext context) {
-    assert(pageRouter != null);
     pageRouter.pop(context);
   }
 }

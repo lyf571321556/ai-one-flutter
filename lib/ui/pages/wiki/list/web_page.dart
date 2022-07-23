@@ -18,11 +18,11 @@ class WebViewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: new Text(
-            "新页面",
-            style: new TextStyle(fontSize: 16.0),
-          )) ,
+        "新页面",
+        style: new TextStyle(fontSize: 16.0),
+      )),
       body: Container(
-          color: Colors.orange,
+        color: Colors.orange,
 //          child: RaisedButton(onPressed: () {
 //            _launchURL();
 //          },child: Text("open"),)
@@ -30,9 +30,9 @@ class WebViewPage extends StatelessWidget {
 //          js.context
 //              .callMethod("open", ["https://stackoverflow.com/questions/ask"]);
 //        },child: Text("open"),)
-      child: HtmlElementView(
-        viewType: "hello-world-html",
-      ),
+        child: HtmlElementView(
+          viewType: "hello-world-html",
+        ),
       ),
     );
   }
@@ -58,7 +58,6 @@ class WebViewPage extends StatelessWidget {
   }
 }
 
-
 //通过iframe加载外部页面
 class WebIframePage extends StatelessWidget {
   // This widget is the root of your application.
@@ -73,7 +72,7 @@ class WebIframePage extends StatelessWidget {
     final iframe = html.IFrameElement()
       ..width = '640'
       ..height = '360'
-    // ..src = './assets/assets/single.html'
+      // ..src = './assets/assets/single.html'
       ..src = './assets/assets/html/index.html'
       ..id = 'rtxeditor'
       ..name = 'rtxeditor'
@@ -94,7 +93,8 @@ class WebIframePage extends StatelessWidget {
       }
     });
 
-    ui.platformViewRegistry.registerViewFactory('editor-html', (int viewId) => iframe);
+    ui.platformViewRegistry
+        .registerViewFactory('editor-html', (int viewId) => iframe);
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -122,7 +122,8 @@ class WebIframePage extends StatelessWidget {
                 // if(!result) {
                 //   jsAlert('dispatch Failed!');
                 // }
-                iframe.contentWindow.postMessage('{"event":"setEditorContent","param":"aaaa"}', '*');
+                iframe.contentWindow?.postMessage(
+                    '{"event":"setEditorContent","param":"aaaa"}', '*');
               },
             )
           ],

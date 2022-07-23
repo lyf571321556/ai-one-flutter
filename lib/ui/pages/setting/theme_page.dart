@@ -20,7 +20,7 @@ class ThemeSelectPage extends StatefulWidget {
 }
 
 class _ThemeSelectPageState extends State<ThemeSelectPage> {
-  List<String> list = null;
+  List<String>? list;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _ThemeSelectPageState extends State<ThemeSelectPage> {
 //                  )
                 GridView.extent(
               maxCrossAxisExtent: 100,
-              children: List.generate(list.length, (inedx) {
+              children: List.generate(list?.length ?? 0, (inedx) {
                 return _buildGridItem(context, inedx, store);
               }),
             ),
@@ -89,13 +89,13 @@ class _ThemeSelectPageState extends State<ThemeSelectPage> {
 
   Widget _buildGridItem(
       BuildContext context, int index, Store<OnesGlobalState> store) {
-    String key = list[index];
-    Color color = themeColorMap[key];
+    String key = list![index];
+    Color? color = themeColorMap[key];
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
         AbsorbPointer(
-          absorbing: color == store.state.themeData.primaryColor,
+          absorbing: color == store.state.themeData?.primaryColor,
           child: InkWell(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             onTap: () {

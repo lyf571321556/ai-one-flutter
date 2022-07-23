@@ -15,13 +15,13 @@ import 'user_redux.dart';
 
 ///global redux store
 class OnesGlobalState {
-  User user;
+  User? user;
 
-  Locale platformLocale;
+  Locale? platformLocale;
 
-  Locale locale;
+  Locale? locale;
 
-  ThemeData themeData;
+  ThemeData? themeData;
 
   OnesGlobalState(
       {this.locale, this.themeData, this.platformLocale, this.user});
@@ -52,8 +52,8 @@ class LoginUserMiddleware implements MiddlewareClass<OnesGlobalState> {
       if (store.state.user != null) {
 //        GraphqlManager.getInsthance()
 //            .initAuthorization(store.state.user.uuid, store.state.user.token);
-        HttpManager.getInstance()
-            .initAuthorization(store.state.user.uuid, store.state.user.token);
+        HttpManager.getInstance().initAuthorization(
+            store.state.user?.uuid ?? "", store.state.user?.token ?? "");
       }
 //      else {
 ////        GraphqlManager.getInstance().clearAuthorization();

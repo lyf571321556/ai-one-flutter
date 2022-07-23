@@ -8,7 +8,8 @@ class NotificationListPage extends StatefulWidget {
   }
 }
 
-class _NotificationListPageContentState extends State<NotificationListPage> with AutomaticKeepAliveClientMixin {
+class _NotificationListPageContentState extends State<NotificationListPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

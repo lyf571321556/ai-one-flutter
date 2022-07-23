@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/dao/user_dao.dart';
+import 'package:ones_ai_flutter/main.dart';
 import 'package:ones_ai_flutter/models/account/user.dart';
 import 'package:redux/redux.dart';
 import 'package:uni_links/uni_links.dart';
+
+import '../../common/redux/global/ones_state.dart';
 
 void initByPlatform() {
   Config.runInWeb = identical(0, 0.0);
@@ -40,17 +43,19 @@ void initProxy(Dio _dio) {
   };
 }
 
-void saveToken(User user, Store store) async {
+Future<void> saveToken(User user, Store<OnesGlobalState> store) async {
   await UserDao.saveLoginUserInfo(user, store);
 }
 
 Future<String> getCurrentRequestUrl() async {
-  String intentlink = await getInitialLink();
-  return intentlink;
+  String? intentlink = await getInitialLink();
+  return intentlink!;
 }
 
 String getCurrentRequestUrlPath() {
   return "-------";
 }
 
-String goToDestPage(String url) {}
+String goToDestPage(String url) {
+  return "";
+}

@@ -16,7 +16,7 @@ class AppDao {
     print("initapp");
     await LocalDataHelper.ready();
     String userInfo = await LocalDataHelper.get(Config.USER_INFO);
-    User user = null; //await UserDao.getUserInfo();
+    User? user; //await UserDao.getUserInfo();
     if (userInfo != null) {
       Map<String, dynamic> userMap = json.decode(userInfo);
       user = User.fromJson(userMap);
@@ -25,11 +25,11 @@ class AppDao {
 
     ///切换语言
     String localInfo = await LocalDataHelper.get(Config.LOCALE);
-    Locale newlocal = null;
     if (localInfo != null && localInfo.length != 0) {
-      newlocal = new Locale(localInfo.split("-")[0], localInfo.split("-")[1]);
+      final newlocal =
+          new Locale(localInfo.split("-")[0], localInfo.split("-")[1]);
+      CommonUtils.changeLocale(store, newlocal);
     }
-    CommonUtils.changeLocale(store, newlocal);
 
     ThemeData newThemeData = ThemeData.light().copyWith(
         primaryColor: Colors.blueAccent,

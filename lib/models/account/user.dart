@@ -6,17 +6,17 @@ part 'user.g.dart';
 class User {
   User();
 
-  String uuid;
-  String email;
-  String token;
-  String name;
-  String title;
-  String avatar;
-  num createTime;
-  String channel;
-  String FirstPinYin;
-  num status;
-  String namePinyin;
+  String? uuid;
+  String? email;
+  String? token;
+  String? name;
+  String? title;
+  String? avatar;
+  num? createTime;
+  String? channel;
+  String? FirstPinYin;
+  num? status;
+  String? namePinyin;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
