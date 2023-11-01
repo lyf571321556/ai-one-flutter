@@ -1,10 +1,7 @@
 //import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluintl/fluintl.dart';
-import 'package:flustars/flustars.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
@@ -17,7 +14,7 @@ import 'package:ones_ai_flutter/ui/pages/wiki/list/wiki_list_page.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
 
 class HomePage extends StatefulWidget {
-  static final String pageName = "HomePage";
+  static final String pageName = 'HomePage';
 
   @override
   State<StatefulWidget> createState() {
@@ -70,8 +67,8 @@ class _HomePageContentState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    String avatar =
-        StoreProvider.of<OnesGlobalState>(context).state.user?.avatar ?? "";
+    final String avatar =
+        StoreProvider.of<OnesGlobalState>(context).state.user?.avatar ?? '';
     return WillPopScope(
       onWillPop: () async {
         if (Scaffold.of(context).isDrawerOpen) {
@@ -97,11 +94,11 @@ class _HomePageContentState extends State<HomePage>
               elevation: 1,
               leading: Config.runInWeb
                   ? Image.network(
-                      avatar == null ? "" : avatar,
+                      avatar,
                       fit: BoxFit.cover,
                     )
                   : CachedNetworkImage(
-                      imageUrl: avatar == null ? "" : avatar,
+                      imageUrl: avatar,
                       imageBuilder: (context, imageProvider) => Container(
                         constraints:
                             BoxConstraints.tightFor(width: 50, height: 50),
@@ -192,7 +189,7 @@ class _TitleBarWidgetState extends State<TitleBarWidget> {
       //MediaQuery.of(context).size.height * 0.007
       alignment: Alignment.centerLeft,
       child: Text(
-        _title ?? "",
+        _title ?? '',
         style: TextStyle(color: Colors.white),
       ), //IntlUtil.getString(context, Strings.home_title)
     );
@@ -200,7 +197,7 @@ class _TitleBarWidgetState extends State<TitleBarWidget> {
 }
 
 class NavigationBarWidget extends StatefulWidget {
-  TabController _tabController;
+  final TabController _tabController;
 
   NavigationBarWidget(this._tabController, {required Key key})
       : super(key: key);
@@ -270,7 +267,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
                 ))
             .toList(),
         onTap: (index) {
-          widget._tabController?.animateTo(index);
+          widget._tabController.animateTo(index);
           setState(() {
             _currentIndex = index;
           });
@@ -281,45 +278,24 @@ class _NavigationBarState extends State<NavigationBarWidget> {
 }
 
 class TabContentViewWidget extends StatelessWidget {
-  TabController? tabController;
+  final TabController? tabController;
 
   TabContentViewWidget({Key? key, this.tabController}) : super(key: key);
 
   Widget buildTabView(BuildContext context, _ChildPage page) {
-    String labelId = page.labelId;
+    final String labelId = page.labelId;
     switch (labelId) {
       case Strings.titleProject:
         return ListProjectPage();
-        break;
       case Strings.titleWiki:
         return WikiListPage();
-        break;
       case Strings.titleDashboard:
         return DashboardPage();
-        break;
       case Strings.titleNotification:
         return NotificationListPage();
-        break;
       default:
         return Container();
-        break;
     }
-  }
-
-  @override
-  Widget buildBuildContext(context) {
-//    like fragment
-//    return IndexedStack(
-//      children: _allChildPages.map((_ChildPage page) {
-//        return buildTabView(context, page);
-//      }).toList(),
-//      index: _currentIndex,
-//    );
-    return new TabBarView(
-        controller: tabController,
-        children: _allChildPages.map((_ChildPage page) {
-          return buildTabView(context, page);
-        }).toList());
   }
 
   @override

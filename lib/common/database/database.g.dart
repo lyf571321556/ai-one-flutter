@@ -2,27 +2,91 @@
 
 part of 'database.dart';
 
-// **************************************************************************
-// MoorGenerator
-// **************************************************************************
-
 // ignore_for_file: type=lint
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _jsonMeta = const VerificationMeta('json');
+  @override
+  late final GeneratedColumn<String> json = GeneratedColumn<String>(
+      'json', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [uuid, name, json];
+  @override
+  String get aliasedName => _alias ?? 'users';
+  @override
+  String get actualTableName => 'users';
+  @override
+  VerificationContext validateIntegrity(Insertable<User> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('json')) {
+      context.handle(
+          _jsonMeta, json.isAcceptableOrUnknown(data['json']!, _jsonMeta));
+    } else if (isInserting) {
+      context.missing(_jsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      json: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}json'])!,
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
 class User extends DataClass implements Insertable<User> {
   final String uuid;
   final String name;
   final String json;
-  User({required this.uuid, required this.name, required this.json});
-  factory User.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return User(
-      uuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      json: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}json'])!,
-    );
-  }
+  const User({required this.uuid, required this.name, required this.json});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -89,15 +153,18 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> uuid;
   final Value<String> name;
   final Value<String> json;
+  final Value<int> rowid;
   const UsersCompanion({
     this.uuid = const Value.absent(),
     this.name = const Value.absent(),
     this.json = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
     required String uuid,
     required String name,
     required String json,
+    this.rowid = const Value.absent(),
   })  : uuid = Value(uuid),
         name = Value(name),
         json = Value(json);
@@ -105,20 +172,26 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<String>? uuid,
     Expression<String>? name,
     Expression<String>? json,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uuid != null) 'uuid': uuid,
       if (name != null) 'name': name,
       if (json != null) 'json': json,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   UsersCompanion copyWith(
-      {Value<String>? uuid, Value<String>? name, Value<String>? json}) {
+      {Value<String>? uuid,
+      Value<String>? name,
+      Value<String>? json,
+      Value<int>? rowid}) {
     return UsersCompanion(
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
       json: json ?? this.json,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -134,6 +207,9 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (json.present) {
       map['json'] = Variable<String>(json.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -142,46 +218,47 @@ class UsersCompanion extends UpdateCompanion<User> {
     return (StringBuffer('UsersCompanion(')
           ..write('uuid: $uuid, ')
           ..write('name: $name, ')
-          ..write('json: $json')
+          ..write('json: $json, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+class $WorkersTable extends Workers with TableInfo<$WorkersTable, Category> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $UsersTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  $WorkersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
-  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
       'uuid', aliasedName, false,
       additionalChecks:
           GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       additionalChecks:
           GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true);
-  final VerificationMeta _jsonMeta = const VerificationMeta('json');
+  static const VerificationMeta _jsonMeta = const VerificationMeta('json');
   @override
-  late final GeneratedColumn<String?> json = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> json = GeneratedColumn<String>(
       'json', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [uuid, name, json];
   @override
-  String get aliasedName => _alias ?? 'users';
+  String get aliasedName => _alias ?? 'workers';
   @override
-  String get actualTableName => 'users';
+  String get actualTableName => 'workers';
   @override
-  VerificationContext validateIntegrity(Insertable<User> instance,
+  VerificationContext validateIntegrity(Insertable<Category> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -207,16 +284,23 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return User.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Category(
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      json: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}json'])!,
+    );
   }
 
   @override
-  $UsersTable createAlias(String alias) {
-    return $UsersTable(attachedDatabase, alias);
+  $WorkersTable createAlias(String alias) {
+    return $WorkersTable(attachedDatabase, alias);
   }
 }
 
@@ -224,18 +308,7 @@ class Category extends DataClass implements Insertable<Category> {
   final String uuid;
   final String name;
   final String json;
-  Category({required this.uuid, required this.name, required this.json});
-  factory Category.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Category(
-      uuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      json: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}json'])!,
-    );
-  }
+  const Category({required this.uuid, required this.name, required this.json});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -302,15 +375,18 @@ class WorkersCompanion extends UpdateCompanion<Category> {
   final Value<String> uuid;
   final Value<String> name;
   final Value<String> json;
+  final Value<int> rowid;
   const WorkersCompanion({
     this.uuid = const Value.absent(),
     this.name = const Value.absent(),
     this.json = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   WorkersCompanion.insert({
     required String uuid,
     required String name,
     required String json,
+    this.rowid = const Value.absent(),
   })  : uuid = Value(uuid),
         name = Value(name),
         json = Value(json);
@@ -318,20 +394,26 @@ class WorkersCompanion extends UpdateCompanion<Category> {
     Expression<String>? uuid,
     Expression<String>? name,
     Expression<String>? json,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uuid != null) 'uuid': uuid,
       if (name != null) 'name': name,
       if (json != null) 'json': json,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   WorkersCompanion copyWith(
-      {Value<String>? uuid, Value<String>? name, Value<String>? json}) {
+      {Value<String>? uuid,
+      Value<String>? name,
+      Value<String>? json,
+      Value<int>? rowid}) {
     return WorkersCompanion(
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
       json: json ?? this.json,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -347,6 +429,9 @@ class WorkersCompanion extends UpdateCompanion<Category> {
     if (json.present) {
       map['json'] = Variable<String>(json.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -355,90 +440,20 @@ class WorkersCompanion extends UpdateCompanion<Category> {
     return (StringBuffer('WorkersCompanion(')
           ..write('uuid: $uuid, ')
           ..write('name: $name, ')
-          ..write('json: $json')
+          ..write('json: $json, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $WorkersTable extends Workers with TableInfo<$WorkersTable, Category> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $WorkersTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  @override
-  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
-      'uuid', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
-      type: const StringType(),
-      requiredDuringInsert: true);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
-      'name', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
-      type: const StringType(),
-      requiredDuringInsert: true);
-  final VerificationMeta _jsonMeta = const VerificationMeta('json');
-  @override
-  late final GeneratedColumn<String?> json = GeneratedColumn<String?>(
-      'json', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [uuid, name, json];
-  @override
-  String get aliasedName => _alias ?? 'workers';
-  @override
-  String get actualTableName => 'workers';
-  @override
-  VerificationContext validateIntegrity(Insertable<Category> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('uuid')) {
-      context.handle(
-          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
-    } else if (isInserting) {
-      context.missing(_uuidMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('json')) {
-      context.handle(
-          _jsonMeta, json.isAcceptableOrUnknown(data['json']!, _jsonMeta));
-    } else if (isInserting) {
-      context.missing(_jsonMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-  @override
-  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Category.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $WorkersTable createAlias(String alias) {
-    return $WorkersTable(attachedDatabase, alias);
-  }
-}
-
 abstract class _$Database extends GeneratedDatabase {
-  _$Database(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+  _$Database(QueryExecutor e) : super(e);
   late final $UsersTable users = $UsersTable(this);
   late final $WorkersTable workers = $WorkersTable(this);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [users, workers];
 }

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:webview_flutter/webview_flutter.dart';
+
 //class WebViewPage extends StatelessWidget {
 //  @override
 //  Widget build(BuildContext context) {
@@ -66,25 +66,53 @@ class WebViewPage extends StatefulWidget {
   }
 }
 
+final Params = {};
+
+final _injectFlutterJsBridge = '''
+    window.onesMobile = {
+        clickViewAttachment: function (data) {
+        FlutterJsBridge.postMessage(data);
+        },
+    }
+    window.onesMobile.params = ${Params};
+  ''';
+
 class WebViewPageState extends State<WebViewPage> {
-  JavascriptChannel _alertJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'Toast',
-        onMessageReceived: (JavascriptMessage message) {
-          print("Toast调用消息哈哈哈:" + message.message);
-        });
-  }
+  late WebViewController _webViewController;
 
-  JavascriptChannel _renderedJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'onEditorRendered',
-        onMessageReceived: (JavascriptMessage message) {
-          print("onEditorRendered调用消息哈哈哈:" + message.message);
-        });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _webViewController = WebViewController();
+    _webViewController
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {
+            debugPrint('Page finished loading: $url');
+            _webViewController.runJavaScript(_injectFlutterJsBridge);
+          },
+          onWebResourceError: (WebResourceError error) {
+            debugPrint('Page resource error: $error');
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..addJavaScriptChannel(
+        'FlutterJsBridge',
+        onMessageReceived: (args) async {
+          final data = json.decode(args.message);
+          debugPrint('回调======$data');
+        },
+      );
+    _webViewController.loadRequest(Uri.parse('http://192.168.1.213:8080/'));
   }
-
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -93,54 +121,18 @@ class WebViewPageState extends State<WebViewPage> {
         title: const Text('Flutter WebView example'),
       ),
       body: Builder(builder: (BuildContext context) {
-        return WebView(
-          initialUrl:
-              'http://192.168.1.213:8080/', //加载assets/html/js_flutter_call_each_other.html资源测试flutter和js互相调用
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-//            _controller = webViewController;
-            _controller.complete(webViewController);
-          },
-          javascriptChannels: <JavascriptChannel>[
-            _alertJavascriptChannel(context),
-            _renderedJavascriptChannel(context),
-          ].toSet(),
-          navigationDelegate: (NavigationRequest request) {
-            print('blocking navigation to $request}');
-            if (request.url.startsWith('js://webview')) {
-              print('blocking navigation to $request}');
-              return NavigationDecision.prevent;
-            }
-            print('allowing navigation to $request');
-            return NavigationDecision.navigate;
-          },
-          onPageFinished: (String url) {
-            print('Page finished loading: $url');
-          },
+        return WebViewWidget(
+          controller: _webViewController,
         );
       }),
-      floatingActionButton: jsButton(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          _webViewController
+              .runJavaScriptReturningResult('callJS("visible")')
+              .then((result) => {});
+        },
+        child: Text('call JS'),
+      ),
     );
-  }
-
-  Widget jsButton() {
-    return FutureBuilder<WebViewController>(
-        future: _controller.future,
-        builder: (BuildContext context,
-            AsyncSnapshot<WebViewController> controller) {
-          if (controller.hasData) {
-            return FloatingActionButton(
-              onPressed: () async {
-                _controller.future.then((controller) {
-                  controller
-                      .evaluateJavascript('callJS("visible")')
-                      .then((result) {});
-                });
-              },
-              child: Text('call JS'),
-            );
-          }
-          return Container();
-        });
   }
 }

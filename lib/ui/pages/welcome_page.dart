@@ -1,14 +1,9 @@
 import 'package:fluintl/fluintl.dart';
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
-import 'package:ones_ai_flutter/common/dao/app_dao.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
-import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/resources/index.dart';
-import 'package:ones_ai_flutter/utils/navigator_utils.dart';
-import 'package:ones_ai_flutter/ui/pages/home_page.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key? key, this.title}) : super(key: key);
@@ -68,10 +63,10 @@ class _WelcomePageState extends State<WelcomePage> {
             child: InkWell(
               child: Center(
                 child: Text(IntlUtil.getString(context, Strings.jumpCount,
-                    params: [0, "111"])),
+                    params: [0, '111'])),
               ),
               onTap: () {
-                String routePath = store.state.user != null
+                final String routePath = store.state.user != null
                     ? PageRouteManager.homePagePath
                     : PageRouteManager.loginPagePath;
                 PageRouteManager.openNewPage(context, routePath, replace: true);

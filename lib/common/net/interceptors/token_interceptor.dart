@@ -7,11 +7,11 @@ class TokenInterceptor extends InterceptorsWrapper {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers["Ones-User-Id"] = _userId;
-    options.headers["Ones-Auth-Token"] = _token;
-    options.headers["Access-Control-Allow-Origin"] = "*";
-    options.headers["content-type"] = "application/json";
-    options.contentType = "application/json";
+    options.headers['Ones-User-Id'] = _userId;
+    options.headers['Ones-Auth-Token'] = _token;
+    options.headers['Access-Control-Allow-Origin'] = '*';
+    options.headers['content-type'] = 'application/json';
+    options.contentType = 'application/json';
     super.onRequest(options, handler);
   }
 
@@ -32,8 +32,8 @@ class TokenInterceptor extends InterceptorsWrapper {
 
   ///清除授权
   void clearAuthorization() {
-    this._userId = "";
-    this._token = "";
+    this._userId = '';
+    this._token = '';
   }
 
   TokenInterceptor withUserId(String userId) {

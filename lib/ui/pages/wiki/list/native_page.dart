@@ -7,14 +7,14 @@ class WebViewPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
             title: new Text(
-          "新页面",
+          '新页面',
           style: new TextStyle(fontSize: 16.0),
         )),
         body: Container(
             color: Colors.orange,
             child: ElevatedButton(
               onPressed: () {},
-              child: Text("open"),
+              child: Text('open'),
             )));
   }
 }

@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/dao/user_dao.dart';
-import 'package:ones_ai_flutter/main.dart';
 import 'package:ones_ai_flutter/models/account/user.dart';
 import 'package:redux/redux.dart';
 import 'package:uni_links/uni_links.dart';
@@ -16,14 +15,14 @@ import '../../common/redux/global/ones_state.dart';
 void initByPlatform() {
   Config.runInWeb = identical(0, 0.0);
   if (Platform.isAndroid) {
-    SystemUiOverlayStyle systemUiOverlayStyle =
+    final SystemUiOverlayStyle systemUiOverlayStyle =
         SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 }
 
 Future<bool> isConnected() async {
-  var connectivityResult = await (new Connectivity().checkConnectivity());
+  final connectivityResult = await new Connectivity().checkConnectivity();
 
   return connectivityResult != ConnectivityResult.none;
 }
@@ -40,6 +39,7 @@ void initProxy(Dio _dio) {
         return true;
       };
     }
+    return null;
   };
 }
 
@@ -48,14 +48,14 @@ Future<void> saveToken(User user, Store<OnesGlobalState> store) async {
 }
 
 Future<String> getCurrentRequestUrl() async {
-  String? intentlink = await getInitialLink();
+  final String? intentlink = await getInitialLink();
   return intentlink!;
 }
 
 String getCurrentRequestUrlPath() {
-  return "-------";
+  return '-------';
 }
 
 String goToDestPage(String url) {
-  return "";
+  return '';
 }

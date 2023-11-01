@@ -8,12 +8,12 @@ import 'package:ones_ai_flutter/ui/pages/setting/theme_page.dart';
 import 'package:ones_ai_flutter/ui/pages/wiki/list/mobile_web_page.dart';
 
 class PageRouteManager {
-  static final String rootPagePath = "/";
-  static final String loginPagePath = "/login";
-  static final String homePagePath = "/home1";
-  static final String languagePagePath = "/language";
-  static final String themePagePath = "/theme";
-  static final String webViewPath = "/webview/:data";
+  static final String rootPagePath = '/';
+  static final String loginPagePath = '/login';
+  static final String homePagePath = '/home1';
+  static final String languagePagePath = '/language';
+  static final String themePagePath = '/theme';
+  static final String webViewPath = '/webview/:data';
   static FluroRouter pageRouter = FluroRouter.appRouter;
 
   static Widget? notSupportPage(
@@ -67,17 +67,17 @@ class PageRouteManager {
       {Map<String, dynamic>? params,
       bool replace = false,
       TransitionType transition = TransitionType.cupertino}) {
-    String query = "";
+    String query = '';
     if (params != null) {
       params.forEach((key, value) {
-        query = key + "=" + Uri.encodeComponent(value);
+        query = key + '=' + Uri.encodeComponent(value);
       });
     } else {
       query = "param=${Uri.encodeComponent('hello')}";
     }
-    pageRouter.navigateTo(context, "${pagePath}?${query}",
-        replace: replace ?? false,
-        transition: transition ?? TransitionType.cupertino,
+    pageRouter.navigateTo(context, '${pagePath}?${query}',
+        replace: replace,
+        transition: transition,
         transitionDuration: Duration(milliseconds: 400));
   }
 

@@ -5,5 +5,5 @@ import '../database.dart';
 Database createDatabase({bool logStatements = false}) {
 //  return Database(WebDatabase('db', logStatements: logStatements));
   return Database(
-      WebDatabase.withStorage(DriftWebStorage.indexedDb("database")));
+      WebDatabase.withStorage(DriftWebStorage.indexedDb('database')));
 }

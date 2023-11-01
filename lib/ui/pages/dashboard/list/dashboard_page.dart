@@ -12,10 +12,11 @@ class _DashboardPageContentState extends State<DashboardPage>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // TODO: implement build
     return Container(
       alignment: Alignment.center,
-      child: Text("Dashboard page"),
+      child: Text('Dashboard page'),
     );
   }
 

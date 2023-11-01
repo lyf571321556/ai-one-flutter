@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';
-import 'package:flutter_easyrefresh/bezier_circle_header.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class ListProjectPage extends StatefulWidget {
   @override
@@ -22,8 +18,9 @@ class _ListProjectPageContentState extends State<ListProjectPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
-      child: Text("我是项目页签"),
+      child: Text('我是项目页签'),
     );
   }
 

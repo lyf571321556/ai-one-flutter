@@ -21,6 +21,7 @@ class _WikiListPageContentState extends State<WikiListPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // TODO: implement build
     //assets/html/index.html
     return Container(
@@ -38,10 +39,10 @@ class _WikiListPageContentState extends State<WikiListPage>
 //      },child: Text("webview"),),
       child: ElevatedButton(
         onPressed: () {
-          var path = PageRouteManager.webViewPath.replaceAll(":data", "1111");
+          final path = PageRouteManager.webViewPath.replaceAll(':data', '1111');
           PageRouteManager.openNewPage(context, path);
         },
-        child: Text("open"),
+        child: Text('open'),
       ),
 //      child: WebView(
 //          initialUrl: "",
@@ -56,10 +57,11 @@ class _WikiListPageContentState extends State<WikiListPage>
     );
   }
 
+  // ignore: unused_element
   void _loadHtmlFromAssets(WebViewController webViewController) async {
-    String fileHtmlContents =
-        await rootBundle.loadString("assets/html/index.html");
-    webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
+    final String fileHtmlContents =
+        await rootBundle.loadString('assets/html/index.html');
+    webViewController.loadHtmlString(Uri.dataFromString(fileHtmlContents,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
   }

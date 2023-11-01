@@ -12,10 +12,11 @@ class _NotificationListPageContentState extends State<NotificationListPage>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // TODO: implement build
     return Container(
       alignment: Alignment.center,
-      child: Text("notification page"),
+      child: Text('notification page'),
     );
   }
 

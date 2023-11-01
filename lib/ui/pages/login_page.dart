@@ -1,5 +1,4 @@
 //import 'package:bot_toast/bot_toast.dart';
-import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluintl/fluintl.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/api/user_api.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
-import 'package:ones_ai_flutter/common/dao/user_dao.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:ones_ai_flutter/resources/font_icons.dart';
@@ -16,7 +14,7 @@ import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/widget/button/gradient_button.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/platform/web/main_web.dart'
-    if (dart.library.io) "package:ones_ai_flutter/platform/mobile/main_mobile.dart";
+    if (dart.library.io) 'package:ones_ai_flutter/platform/mobile/main_mobile.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -45,7 +43,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   static String? _userName, _password;
 
-  Animation<EdgeInsets>? _containerCircleAnimation;
   Animation? _homePageZoomOut;
 
   @override
@@ -55,7 +52,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _loginAanimationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1500));
     _loginButtonWidthAnimation = Tween<double>(
-            begin: window.physicalSize.width, end: _loginButtonMinWidth)
+            begin: MediaQuery.of(context).size.width, end: _loginButtonMinWidth)
         .animate(CurvedAnimation(
             parent: _loginAanimationController!,
             curve: Interval(.0, 0.25, curve: Curves.ease))
@@ -72,7 +69,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     });
     _homePageZoomOut = new Tween(
       begin: _loginButtonMinWidth,
-      end: window.physicalSize.width,
+      end: MediaQuery.of(context).size.width,
     ).animate(
       new CurvedAnimation(
         parent: _loginSuccessAnimationController!,
@@ -83,21 +80,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
       ),
     );
-    _containerCircleAnimation = new EdgeInsetsTween(
-      begin: const EdgeInsets.only(bottom: 50.0),
-      end: const EdgeInsets.only(bottom: 0.0),
-    ).animate(
-      new CurvedAnimation(
-        parent: _loginSuccessAnimationController!,
-        curve: new Interval(
-          0.500,
-          0.800,
-          curve: Curves.ease,
-        ),
-      ),
-    );
-    _accountController.text = "huangjinfan+5001@ones.ai";
-    _passwordController.text = "Aa123456";
+    _accountController.text = 'huangjinfan+5001@ones.ai';
+    _passwordController.text = 'Aa123456';
   }
 
   @override
@@ -138,7 +122,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           color: Colors.red,
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage("assets/images/ones_icon.png"),
+                            image: AssetImage('assets/images/ones_icon.png'),
                           ),
                         ),
                       ),
@@ -156,7 +140,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               SizedBox(height: _userNameValied ? 10 : 10),
                               _buildPasswordTextField(),
                               _buildForgetPasswordWidget(),
-                              _buildAccountOrPswInputBox(false, "样式对比输入框")
+                              _buildAccountOrPswInputBox(false, '样式对比输入框')
                             ],
                           ),
                         ),
@@ -236,7 +220,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     .addPostFrameCallback((_) => _accountController.clear());
               })),
       validator: (value) {
-        var accountReg = RegExp(
+        final accountReg = RegExp(
             r"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");
         _userNameValied = accountReg.hasMatch(value!);
         return _userNameValied
@@ -284,8 +268,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   });
                 })),
         validator: (value) {
-          var passwordReg =
-              RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[\x21-\x7E]{8,32}$");
           _passwordValied = value != null &&
               value.length >= 8; // passwordReg.hasMatch(value);
           return _passwordValied
@@ -302,7 +284,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       child: InkWell(
         onTap: () {
           BotToast.showText(
-              text: "to do!",
+              text: 'to do!',
               duration: Duration(seconds: 5),
               onlyOne: true,
               crossPage: true,
@@ -325,7 +307,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   Widget _buildLoginWidget() {
-    Store<OnesGlobalState> store = StoreProvider.of(context);
+    final Store<OnesGlobalState> store = StoreProvider.of(context);
     return Hero(
         tag: Config.LOGIN_HERO_TAG,
         child: AnimatedBuilder(
@@ -386,7 +368,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         ?.reverse()
                                         .orCancel;
                                     BotToast.showText(
-                                        text: "login failed,please retry!");
+                                        text: 'login failed,please retry!');
                                   }
                                 }).catchError((e) async {
                                   setState(() {

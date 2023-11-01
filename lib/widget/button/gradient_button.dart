@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 //通过组合自动以widget
 class GradientButton extends StatelessWidget {
-  double? width, height;
+  final double? width, height;
 
-  List<Color>? colors;
-  Widget? child;
-  BorderRadius? borderRadius;
+  final List<Color>? colors;
+  final Widget? child;
+  final BorderRadius? borderRadius;
 
-  EdgeInsetsGeometry? childPadding;
-  GestureDragCancelCallback? onPressed;
+  final EdgeInsetsGeometry? childPadding;
+  final GestureDragCancelCallback? onPressed;
 
   GradientButton(
       {this.width,
@@ -23,11 +23,11 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    ThemeData themeData = Theme.of(context);
-    List<Color> _colors = colors ??
+    final ThemeData themeData = Theme.of(context);
+    final List<Color> _colors = colors ??
         [
           themeData.primaryColor,
-          themeData.primaryColor ?? themeData.primaryColorDark
+          themeData.primaryColor
         ];
     return DecoratedBox(
       decoration: BoxDecoration(

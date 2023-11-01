@@ -30,8 +30,7 @@ class PageInfo {
 class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
   int currentPageIndex = 0;
   List<PageInfo> _pageInfo = [];
-  PageInfo loginOut = PageInfo(Strings.titleHome, Icons.power_settings_new, "");
-  String _userName = "";
+  PageInfo loginOut = PageInfo(Strings.titleHome, Icons.power_settings_new, '');
 
   @override
   void initState() {
@@ -52,7 +51,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
         PageRouteManager.languagePagePath));
     _pageInfo.add(PageInfo(
         Strings.titleTheme, Icons.color_lens, PageRouteManager.themePagePath));
-    _pageInfo.add(PageInfo(Strings.titleLoginOut, Icons.exit_to_app, ""));
+    _pageInfo.add(PageInfo(Strings.titleLoginOut, Icons.exit_to_app, ''));
   }
 
   @override
@@ -73,7 +72,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
       }
     }
     */
-    Store<OnesGlobalState> store = StoreProvider.of(context);
+    final Store<OnesGlobalState> store = StoreProvider.of(context);
     return new Column(
       children: <Widget>[
         new Container(
@@ -103,7 +102,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                                     .state
                                     .user
                                     ?.avatar ??
-                                "",
+                                '',
                             fit: BoxFit.cover,
                           )
                         : CachedNetworkImage(
@@ -111,7 +110,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                                     .state
                                     .user
                                     ?.avatar ??
-                                "",
+                                '',
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -140,7 +139,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                   ),
                   SizedBox(height: 6),
                   new Text(
-                    "部门/职位",
+                    '部门/职位',
                     style: new TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
@@ -152,7 +151,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                             .state
                             .user
                             ?.name ??
-                        "暂无",
+                        '暂无',
                     style: new TextStyle(color: Colors.white, fontSize: 12.0),
                   ),
                 ],
@@ -191,7 +190,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
               padding: const EdgeInsets.all(0.0),
               itemCount: _pageInfo.length,
               itemBuilder: (BuildContext context, int index) {
-                PageInfo pageInfo = _pageInfo[index];
+                final PageInfo pageInfo = _pageInfo[index];
                 return new ListTile(
                   leading: new Icon(pageInfo.iconData,
                       color: index == currentPageIndex
@@ -200,7 +199,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                   trailing: Icon(Icons.keyboard_arrow_right),
                   title: Text(IntlUtil.getString(context, pageInfo.titleId)),
                   onTap: () async {
-                    if (pageInfo.pagePath == "") {
+                    if (pageInfo.pagePath == '') {
                       await UserDao.saveLoginUserInfo(null, store);
                       PageRouteManager.openNewPage(
                           context, PageRouteManager.loginPagePath,

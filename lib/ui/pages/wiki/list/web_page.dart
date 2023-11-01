@@ -18,7 +18,7 @@ class WebViewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: new Text(
-        "新页面",
+        '新页面',
         style: new TextStyle(fontSize: 16.0),
       )),
       body: Container(
@@ -31,7 +31,7 @@ class WebViewPage extends StatelessWidget {
 //              .callMethod("open", ["https://stackoverflow.com/questions/ask"]);
 //        },child: Text("open"),)
         child: HtmlElementView(
-          viewType: "hello-world-html",
+          viewType: 'hello-world-html',
         ),
       ),
     );
@@ -46,14 +46,15 @@ class WebViewPage extends StatelessWidget {
 //        .toString());
 //  }
 
+  // ignore: unused_element
   _launchURL() async {
     const url = 'https://flutter.io';
     print(url);
-    if (await canLaunch(url)) {
-      print("launch");
-      await launch(url);
+    if (await canLaunchUrl(Uri.tryParse(url)!)) {
+      print('launch');
+      await launchUrl(Uri.tryParse(url)!);
     } else {
-      print("throw");
+      print('throw');
       throw 'Could not launch $url';
     }
   }

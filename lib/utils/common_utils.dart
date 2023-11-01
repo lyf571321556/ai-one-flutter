@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ones_ai_flutter/common/redux/global/user_redux.dart';
@@ -9,7 +8,7 @@ import 'package:ones_ai_flutter/common/redux/global/locale_redux.dart';
 import 'package:ones_ai_flutter/common/redux/global/theme_redux.dart';
 
 class CommonUtils {
-  static Locale curLocale = Locale("", "");
+  static Locale curLocale = Locale('', '');
 
   static changeLocale(Store<OnesGlobalState> store, Locale? newlocale) {
     if (newlocale != null) {

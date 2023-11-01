@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/models/account/index.dart';
 

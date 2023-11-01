@@ -25,6 +25,7 @@ dependencies
 dev_dependencies:
   build_runner: ^1.4.0
   retrofit_generator: any
+# drift数据库组件代码生成
 flutter pub run build_runner build 
 # moor数据库
 flutter packages pub run build_runner build --delete-conflicting-outputs

@@ -46,12 +46,12 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
     setState(() {});
     if (languageModel.titleId == Strings.languageAuto) {
       CommonUtils.changeLocale(store, null);
-      LocalDataHelper.put(Config.LOCALE, "");
+      LocalDataHelper.put(Config.LOCALE, '');
     } else {
       CommonUtils.changeLocale(
           store, Locale(languageModel.languageCode, languageModel.countryCode));
       LocalDataHelper.put(Config.LOCALE,
-          languageModel.languageCode + "-" + languageModel.countryCode);
+          languageModel.languageCode + '-' + languageModel.countryCode);
     }
     PageRouteManager.closePage(context);
   }
@@ -69,15 +69,15 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
           )),
           body: ListView.builder(
             itemBuilder: (context, index) {
-              LanguageModel languageModel = _Languagelist[index];
-              String title = languageModel.titleId == Strings.languageAuto
+              final LanguageModel languageModel = _Languagelist[index];
+              final String title = languageModel.titleId == Strings.languageAuto
                   ? IntlUtil.getString(context, languageModel.titleId)
                   : IntlUtil.getString(context, languageModel.titleId,
                       languageCode: 'zh', countryCode: 'CH');
-              bool isSelected = (store.state.locale != null &&
+              bool isSelected = store.state.locale != null &&
                   store.state.locale?.countryCode == languageModel.countryCode &&
                   store.state.locale?.languageCode ==
-                      languageModel.languageCode);
+                      languageModel.languageCode;
               if (languageModel.titleId == Strings.languageAuto) {
                 isSelected = store.state.locale == null;
               }

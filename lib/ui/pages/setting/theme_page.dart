@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:fluintl/fluintl.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +75,7 @@ class _ThemeSelectPageState extends State<ThemeSelectPage> {
   }
 
   void _changeTheme(String key, Store<OnesGlobalState> store) {
-    ThemeData newThemeData = ThemeData.light().copyWith(
+    final ThemeData newThemeData = ThemeData.light().copyWith(
         primaryColor: themeColorMap[key],
         colorScheme: ColorScheme.fromSwatch(accentColor: themeColorMap[key]),
         indicatorColor: themeColorMap[key],
@@ -89,8 +88,8 @@ class _ThemeSelectPageState extends State<ThemeSelectPage> {
 
   Widget _buildGridItem(
       BuildContext context, int index, Store<OnesGlobalState> store) {
-    String key = list![index];
-    Color? color = themeColorMap[key];
+    final String key = list![index];
+    final Color? color = themeColorMap[key];
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[

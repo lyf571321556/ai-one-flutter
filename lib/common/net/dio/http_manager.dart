@@ -7,7 +7,7 @@ import 'package:ones_ai_flutter/common/net/dio/http_result.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import '../interceptors/token_interceptor.dart';
 import 'package:ones_ai_flutter/platform/web/main_web.dart'
-    if (dart.library.io) "package:ones_ai_flutter/platform/mobile/main_mobile.dart";
+    if (dart.library.io) 'package:ones_ai_flutter/platform/mobile/main_mobile.dart';
 
 enum HttpMethod { POST, GET }
 
@@ -16,10 +16,10 @@ class HttpManager {
   static final int WRITE_TIMEOUT = 5000;
   static final int READ_TIMEOUT = 5000;
   static Dio? _httpClient;
-  static final String web_dev_baseUrl = "http://127.0.0.1:3000/api/";
-  static final String mobile_dev_baseUrl = "https://devapi.myones.net/";
-  static final String web_release_baseUrl = "http://127.0.0.1:3000/api/";
-  static final String mobile_release_baseUrl = "https://devapi.myones.net/";
+  static final String web_dev_baseUrl = 'http://127.0.0.1:3000/api/';
+  static final String mobile_dev_baseUrl = 'https://devapi.myones.net/';
+  static final String web_release_baseUrl = 'http://127.0.0.1:3000/api/';
+  static final String mobile_release_baseUrl = 'https://devapi.myones.net/';
   final TokenInterceptor _tokenInterceptors = new TokenInterceptor();
 
   factory HttpManager() => _sharedInstance();
@@ -48,12 +48,12 @@ class HttpManager {
   static HttpManager getInstance() => new HttpManager();
 
   void _initClient() {
-    BaseOptions baseOption = new BaseOptions(
-        method: "POST",
+    final BaseOptions baseOption = new BaseOptions(
+        method: 'POST',
         baseUrl: _getBaseUrl(),
-        connectTimeout: CONNECT_TIMEOUT,
-        receiveTimeout: READ_TIMEOUT,
-        sendTimeout: WRITE_TIMEOUT);
+        connectTimeout: Duration(minutes: CONNECT_TIMEOUT),
+        receiveTimeout: Duration(minutes: READ_TIMEOUT),
+        sendTimeout: Duration(minutes: WRITE_TIMEOUT));
     _httpClient = new Dio(baseOption);
     _httpClient!.interceptors.add(_tokenInterceptors);
     if (!Config.RELEASE) {
@@ -64,15 +64,15 @@ class HttpManager {
   }
 
   clearAuthorization() {
-    print("dio clearAuthorization start");
+    print('dio clearAuthorization start');
     _tokenInterceptors.clearAuthorization();
-    print("dio clearAuthorization end");
+    print('dio clearAuthorization end');
   }
 
   initAuthorization(String userId, String token) {
-    print("dio initAuthorization start");
+    print('dio initAuthorization start');
     _tokenInterceptors.withUserId(userId).withToken(token);
-    print("dio initAuthorization end");
+    print('dio initAuthorization end');
   }
 
   Future<HttpResult<dynamic>> get(String url,
@@ -96,7 +96,6 @@ class HttpManager {
       Map<String, dynamic> bodyParams = const {},
       FormData? formData,
       CancelToken? token}) async {
-    assert(bodyParams != null);
     return await _request(url,
         httpMethod: HttpMethod.POST,
         pathParams: pathParams,
@@ -125,7 +124,7 @@ class HttpManager {
 ////      response.statusMessage = error.toString();
 ////      resultCallBack.onError(response);
 //    });
-    ;
+//     ;
 //        .then(task)
 //        .catchError((error) {
 //          print("处理数据错误：" + error.toString());
@@ -138,7 +137,6 @@ class HttpManager {
       ProgressCallback? onSendprogressCallBack,
       ProgressCallback? onReceiveProgressCallBack,
       required CancelToken token}) async {
-    assert(formData != null);
     return _request(url,
         httpMethod: HttpMethod.POST,
         pathParams: pathParams,
@@ -150,7 +148,6 @@ class HttpManager {
 
   Future<HttpResult> _request(
     String url, {
-    Options? option,
     required HttpMethod httpMethod,
     Map<String, dynamic>? pathParams,
     Map<String, dynamic>? bodyParams,
@@ -159,7 +156,7 @@ class HttpManager {
     ProgressCallback? onReceiveProgressCallBack,
     required CancelToken token,
   }) async {
-    assert(url != null && url.length > 0);
+    assert(url.length > 0);
     HttpResult httpResult = new HttpResult();
     if (pathParams != null && pathParams.isNotEmpty) {
       pathParams.forEach((key, value) {
@@ -168,29 +165,29 @@ class HttpManager {
         }
       });
     }
-    HttpResult catchError(DioError e) {
-      HttpResult httpResult = new HttpResult();
+    HttpResult catchError(DioException e) {
+      final HttpResult httpResult = new HttpResult();
       if (e.response != null) {
         httpResult.statusCode = e.response?.statusCode;
         httpResult.statusMessage = e.response?.statusMessage;
         httpResult.data = e.response?.data;
       }
       switch (e.type) {
-        case DioErrorType.receiveTimeout:
+        case DioExceptionType.receiveTimeout:
           httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
           break;
-        case DioErrorType.connectTimeout:
+        case DioExceptionType.connectionTimeout:
           httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
           break;
-        case DioErrorType.sendTimeout:
+        case DioExceptionType.sendTimeout:
           httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
           break;
-        case DioErrorType.response:
+        case DioExceptionType.badResponse:
           break;
-        case DioErrorType.cancel:
+        case DioExceptionType.cancel:
           httpResult.statusCode = HttpCode.CANCEL_ERROR_CODE;
           break;
-        case DioErrorType.other:
+        case DioExceptionType.unknown:
           if (e.error != null) {
 //            if (e.error is SocketException) {
 //              httpResult.statusCode = HttpCode.INVALID_NETWORK_CODE;
@@ -201,6 +198,12 @@ class HttpManager {
             httpResult.statusMessage = e.error.toString();
 //            }
           }
+          break;
+        case DioExceptionType.badCertificate:
+          // TODO: Handle this case.
+          break;
+        case DioExceptionType.connectionError:
+          // TODO: Handle this case.
           break;
       }
       return httpResult;
@@ -214,7 +217,7 @@ class HttpManager {
             onSendProgress: onSendprogressCallBack,
             onReceiveProgress: onReceiveProgressCallBack,
             cancelToken: token,
-            options: Options(method: "POST"));
+            options: Options(method: 'POST'));
 //            .catchError((Object err) {
 //          if (resultCallBack != null) {
 //            resultCallBack.onError(catchError(err));
@@ -225,7 +228,7 @@ class HttpManager {
         response = await _httpClient!.get(
           url,
           cancelToken: token,
-          options: Options(method: "GET"),
+          options: Options(method: 'GET'),
         );
 //            .catchError((Object err) {
 //          if (resultCallBack != null) {
@@ -237,7 +240,7 @@ class HttpManager {
       httpResult.statusCode = response.statusCode;
       httpResult.statusMessage = response.statusMessage;
       httpResult.data = response.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       httpResult = catchError(e);
     }
     return Future.value(httpResult);

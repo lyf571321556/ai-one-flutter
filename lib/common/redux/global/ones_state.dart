@@ -1,7 +1,5 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:ones_ai_flutter/common/net/dio/http_manager.dart';
-import 'package:ones_ai_flutter/common/net/graphql/graphql_manager.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/common/redux/global/locale_redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -48,18 +46,18 @@ class LoginUserMiddleware implements MiddlewareClass<OnesGlobalState> {
   @override
   void call(Store<OnesGlobalState> store, dynamic action, NextDispatcher next) {
     if (action is UserChangeActioin) {
-      print("*********** UserChangeActioin  Middleware start*********** ");
+      print('*********** UserChangeActioin  Middleware start*********** ');
       if (store.state.user != null) {
 //        GraphqlManager.getInsthance()
 //            .initAuthorization(store.state.user.uuid, store.state.user.token);
         HttpManager.getInstance().initAuthorization(
-            store.state.user?.uuid ?? "", store.state.user?.token ?? "");
+            store.state.user?.uuid ?? '', store.state.user?.token ?? '');
       }
 //      else {
 ////        GraphqlManager.getInstance().clearAuthorization();
 //        HttpManager.getInstance().clearAuthorization();
 //      }
-      print("*********** UserChangeActioin  Middleware end*********** ");
+      print('*********** UserChangeActioin  Middleware end*********** ');
     }
     next(action);
   }

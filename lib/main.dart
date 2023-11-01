@@ -4,7 +4,6 @@ import 'package:bot_toast/bot_toast.dart';
 
 import 'package:fluintl/fluintl.dart';
 import 'package:fluro/fluro.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,12 +15,12 @@ import 'package:ones_ai_flutter/ui/pages/home_page.dart';
 import 'package:ones_ai_flutter/ui/pages/login_page.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/platform/web/main_web.dart'
-    if (dart.library.io) "package:ones_ai_flutter/platform/mobile/main_mobile.dart";
+    if (dart.library.io) 'package:ones_ai_flutter/platform/mobile/main_mobile.dart';
 import 'common/redux/global/locale_redux.dart';
 import 'common/routes/page_route.dart';
 
 void main() {
-  runZoned(() {
+  runZonedGuarded(() {
     debugPaintSizeEnabled = !true;
     WidgetsFlutterBinding.ensureInitialized();
     initByPlatform();
@@ -36,25 +35,25 @@ void main() {
 //    runAutoSizeApp(OnesApp());;
     runApp(OnesApp());
     PaintingBinding.instance.imageCache.maximumSize = 100;
-  }, onError: (object, stack) {
-    print("===============global error start===============");
-    print(object);
+  }, (Object error, StackTrace stack) {
+    print('===============global error start===============');
+    print(error);
     print(stack);
-    print("===============global error end===============");
+    print('===============global error end===============');
   });
 }
 
 void initPlatformStateForUniLinks() async {
-  print("request coming");
-  String url = await getCurrentRequestUrl();
+  print('request coming');
+  final String url = await getCurrentRequestUrl();
   print(url);
-  AppRouteMatch? appRouteMatch =
+  final AppRouteMatch? appRouteMatch =
       PageRouteManager.pageRouter.match(getCurrentRequestUrlPath());
   print(appRouteMatch?.parameters);
   if (appRouteMatch != null) {
     goToDestPage(url);
   }
-  print("request ending");
+  print('request ending');
 }
 
 class OnesApp extends StatefulWidget {
@@ -67,24 +66,24 @@ class OnesApp extends StatefulWidget {
 
 class OnesAppState extends State<OnesApp> {
   var _buildDataFuture;
-  final Store<OnesGlobalState> onesStore = new Store<OnesGlobalState>(
-      createOnesAppReducer,
-      middleware: onesMiddlewares,
-      initialState: new OnesGlobalState(
-          themeData: ThemeData.light().copyWith(
-              primaryColor: Colors.blueAccent,
-              colorScheme:
-                  ColorScheme.fromSwatch(accentColor: Colors.blueAccent),
-              hintColor: Colors.grey.withOpacity(0.5),
-              highlightColor: Colors.lightBlueAccent,
-              indicatorColor: Colors.white,
-              platform: TargetPlatform.iOS),
-          platformLocale: WidgetsBinding.instance.window.locale));
+  late Store<OnesGlobalState> onesStore;
 
   @override
   void initState() {
     // TODO: implement initState
     initPlatformStateForUniLinks();
+    onesStore = new Store<OnesGlobalState>(createOnesAppReducer,
+        middleware: onesMiddlewares,
+        initialState: new OnesGlobalState(
+            themeData: ThemeData.light().copyWith(
+                primaryColor: Colors.blueAccent,
+                colorScheme:
+                    ColorScheme.fromSwatch(accentColor: Colors.blueAccent),
+                hintColor: Colors.grey.withOpacity(0.5),
+                highlightColor: Colors.lightBlueAccent,
+                indicatorColor: Colors.white,
+                platform: TargetPlatform.iOS),
+            platformLocale: Localizations.localeOf(context)));
     _buildDataFuture = AppDao.initApp(onesStore);
     super.initState();
     setLocalizedValues(localizedValues);
@@ -121,9 +120,9 @@ class OnesAppState extends State<OnesApp> {
   }
 
   Widget _buildWidgetBuilder(BuildContext context, AsyncSnapshot snapshot) {
-    print("-------1--------");
+    print('-------1--------');
     if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-      print("-------2--------");
+      print('-------2--------');
       return StoreProvider<OnesGlobalState>(
           store: snapshot.data,
           child: StoreBuilder<OnesGlobalState>(builder: (context, store) {
@@ -164,6 +163,7 @@ class OnesAppState extends State<OnesApp> {
                   store.dispatch(
                       ChangePlatformLocaleAction(supportedLocales.first));
                 }
+                return null;
               },
               theme: store.state.themeData,
 //                  routes: {
@@ -177,7 +177,7 @@ class OnesAppState extends State<OnesApp> {
             );
           }));
     } else {
-      print("-------3--------");
+      print('-------3--------');
       return Container(
         decoration: BoxDecoration(color: Colors.red),
       );
