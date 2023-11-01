@@ -81,6 +81,7 @@ dev_dependencies:
   #  json_serializable: ^3.3.0
   #  retrofit_generator: # use the latest version
   build_web_compilers: ^3.2.4
+  flutter_lints: ^2.0.3
 #  flutter_test:
 #    sdk: flutter
 
