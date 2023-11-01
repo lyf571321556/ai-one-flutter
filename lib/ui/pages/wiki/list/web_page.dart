@@ -36,6 +36,7 @@ class WebViewPage extends StatelessWidget {
       ),
     );
   }
+
 //
 //  void _loadHtmlFromAssets(WebViewController webViewController) async {
 //    String fileHtmlContents =

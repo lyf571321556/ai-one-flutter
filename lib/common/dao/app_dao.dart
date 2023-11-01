@@ -33,7 +33,7 @@ class AppDao {
 
     ThemeData newThemeData = ThemeData.light().copyWith(
         primaryColor: Colors.blueAccent,
-        accentColor: Colors.blueAccent,
+        colorScheme: ColorScheme.fromSwatch(accentColor: Colors.blueAccent),
         indicatorColor: Colors.white,
         platform: TargetPlatform.iOS);
 
@@ -41,7 +41,8 @@ class AppDao {
     if (colorKey != null && colorKey.length != 0) {
       newThemeData = ThemeData.light().copyWith(
           primaryColor: themeColorMap[colorKey],
-          accentColor: themeColorMap[colorKey],
+          colorScheme:
+              ColorScheme.fromSwatch(accentColor: themeColorMap[colorKey]),
           indicatorColor: Colors.white,
           platform: TargetPlatform.iOS);
     }

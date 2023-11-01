@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 //import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -35,7 +36,7 @@ class _WikiListPageContentState extends State<WikiListPage>
 //          r'^(https).+(twitter)', // prevent redirecting to twitter when user click on its icon in flutter website
 //        );
 //      },child: Text("webview"),),
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () {
           var path = PageRouteManager.webViewPath.replaceAll(":data", "1111");
           PageRouteManager.openNewPage(context, path);

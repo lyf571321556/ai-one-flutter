@@ -78,7 +78,7 @@ class _ThemeSelectPageState extends State<ThemeSelectPage> {
   void _changeTheme(String key, Store<OnesGlobalState> store) {
     ThemeData newThemeData = ThemeData.light().copyWith(
         primaryColor: themeColorMap[key],
-        accentColor: themeColorMap[key],
+        colorScheme: ColorScheme.fromSwatch(accentColor: themeColorMap[key]),
         indicatorColor: themeColorMap[key],
         platform: TargetPlatform.iOS);
     CommonUtils.changeTheme(store, newThemeData);
