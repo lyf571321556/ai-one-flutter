@@ -1,6 +1,6 @@
 {
   "@@last_modified": "2023-11-03T17:59:25.200809",
-  "titleHome": "APP名称",
+  "titleHome": "主頁",
   "@titleHome": {
     "description": "应用的标题名称",
     "type": "text",
@@ -37,33 +37,33 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleLanguage": "语言",
+  "titleLanguage": "語言",
   "@titleLanguage": {
-    "description": "应用-语言",
+    "description": "应用-語言",
     "type": "text",
     "placeholders": {}
   },
-  "changeLanguage": "切换语言",
+  "changeLanguage": "切換語言",
   "@changeLanguage": {
-    "description": "应用-切换语言",
+    "description": "应用-切換語言",
     "type": "text",
     "placeholders": {}
   },
-  "titleTheme": "主题",
+  "titleTheme": "主題",
   "@titleTheme": {
-    "description": "应用-主题",
+    "description": "应用-主題",
     "type": "text",
     "placeholders": {}
   },
-  "changeTheme": "切换主题",
+  "changeTheme": "切换主題",
   "@changeTheme": {
-    "description": "应用-切换主题",
+    "description": "应用-切换主題",
     "type": "text",
     "placeholders": {}
   },
-  "languageAuto": "跟随系统",
+  "languageAuto": "跟隨系統",
   "@languageAuto": {
-    "description": "应用-切换主题-跟随系统",
+    "description": "应用-切换主题-跟隨系統",
     "type": "text",
     "placeholders": {}
   },
@@ -91,15 +91,15 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleLogin": "登录",
+  "titleLogin": "登錄",
   "@titleLogin": {
-    "description": "登录页面",
+    "description": "登錄页面",
     "type": "text",
     "placeholders": {}
   },
   "titleAccount": "账号",
   "@titleAccount": {
-    "description": "账号",
+    "description": "賬號",
     "type": "text",
     "placeholders": {}
   },
