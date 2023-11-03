@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:ones_ai_flutter/common/redux/global/user_redux.dart';
 import 'package:ones_ai_flutter/models/account/user.dart';

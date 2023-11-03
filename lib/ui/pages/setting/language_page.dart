@@ -75,7 +75,8 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
                   : IntlUtil.getString(context, languageModel.titleId,
                       languageCode: 'zh', countryCode: 'CH');
               bool isSelected = store.state.locale != null &&
-                  store.state.locale?.countryCode == languageModel.countryCode &&
+                  store.state.locale?.countryCode ==
+                      languageModel.countryCode &&
                   store.state.locale?.languageCode ==
                       languageModel.languageCode;
               if (languageModel.titleId == Strings.languageAuto) {
