@@ -45,3 +45,8 @@ flutter run --flavor dev -t lib/main.dart
 
 flutter run -d chrome --release --web-port=55140 //
 release在指定端口下运行，且此时可以访问在web/assets目录下未在pubspec.yaml申明的资源（手动拷贝到此目录的文件）;
+
+# 国际化资源生成
+dart run intl_translation:extract_to_arb --output-dir=lib/l10n/arb lib/l10n/intl_messages.dart
+
+dart run intl_translation:generate_from_arb --output-dir=lib/l10n/languages --no-use-deferred-loading lib/l10n/intl_messages.dart lib/l10n/arb/intl_*.arb

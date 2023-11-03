@@ -1,0 +1,169 @@
+{
+  "@@last_modified": "2023-11-03T17:53:26.585192",
+  "titleHome": "Home",
+  "@titleHome": {
+    "description": "应用的标题名称",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeCountContent": "{count,plural, =0{There are no clicks.}=1{There is one click.}other{There are {count} clicks.}}",
+  "@welcomeCountContent": {
+    "description": "欢迎页面点击次数",
+    "type": "text",
+    "placeholders": {
+      "name": {
+        "example": "tom"
+      },
+      "count": {
+        "example": 1
+      }
+    }
+  },
+  "exitApp": "再点一次退出应用",
+  "@exitApp": {
+    "description": "点击退出APP提示",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleLoginOut": "退出应用",
+  "@titleLoginOut": {
+    "description": "退出应用提示",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleSetting": "设置",
+  "@titleSetting": {
+    "description": "应用-设置",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleLanguage": "Language",
+  "@titleLanguage": {
+    "description": "应用-语言",
+    "type": "text",
+    "placeholders": {}
+  },
+  "changeLanguage": "切换语言",
+  "@changeLanguage": {
+    "description": "应用-切换语言",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleTheme": "Theme",
+  "@titleTheme": {
+    "description": "应用-主题",
+    "type": "text",
+    "placeholders": {}
+  },
+  "changeTheme": "切换主题",
+  "@changeTheme": {
+    "description": "应用-切换主题",
+    "type": "text",
+    "placeholders": {}
+  },
+  "languageAuto": "跟随系统",
+  "@languageAuto": {
+    "description": "应用-切换主题-跟随系统",
+    "type": "text",
+    "placeholders": {}
+  },
+  "languageZH": "简体中文",
+  "@languageZH": {
+    "description": "应用-切换语言-简体中文",
+    "type": "text",
+    "placeholders": {}
+  },
+  "languageTW": "繁體中文（台灣）",
+  "@languageTW": {
+    "description": "应用-切换语言-繁體中文（台灣）",
+    "type": "text",
+    "placeholders": {}
+  },
+  "languageHK": "繁體中文（香港）",
+  "@languageHK": {
+    "description": "应用-切换语言-繁體中文（香港）",
+    "type": "text",
+    "placeholders": {}
+  },
+  "languageEN": "English",
+  "@languageEN": {
+    "description": "应用-切换语言-English",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleLogin": "登录",
+  "@titleLogin": {
+    "description": "登录页面",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleAccount": "账号",
+  "@titleAccount": {
+    "description": "账号",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleAccountHint": "请输入账号",
+  "@titleAccountHint": {
+    "description": "登录账号输入提示",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleAccountError": "请输入正确的账号",
+  "@titleAccountError": {
+    "description": "登录账号验证提示",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titlePassword": "密码",
+  "@titlePassword": {
+    "description": "密码",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titlePasswordHint": "请输入密码",
+  "@titlePasswordHint": {
+    "description": "登录密码输入提示",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titlePasswordError": "密码为{minLength}~{maxLength}位,且必须包含大小写字母和数字",
+  "@titlePasswordError": {
+    "description": "登录密码验证提示",
+    "type": "text",
+    "placeholders": {
+      "minLength": {},
+      "maxLength": {}
+    }
+  },
+  "titleForgetPassword": "忘记密码?",
+  "@titleForgetPassword": {
+    "description": "忘记密码入口按钮文字",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleProject": "Project",
+  "@titleProject": {
+    "description": "底部导航栏-项目",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleWiki": "Wiki",
+  "@titleWiki": {
+    "description": "底部导航栏-文档",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleDashboard": "Dashboard",
+  "@titleDashboard": {
+    "description": "底部导航栏-仪表盘",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleNotification": "Notification",
+  "@titleNotification": {
+    "description": "底部导航栏-通知",
+    "type": "text",
+    "placeholders": {}
+  }
+}

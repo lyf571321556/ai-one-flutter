@@ -4,7 +4,6 @@ import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:ones_ai_flutter/common/storage/local_storage.dart';
 import 'package:ones_ai_flutter/l10n/intl_delegate.dart';
-import 'package:ones_ai_flutter/main.dart';
 import 'package:ones_ai_flutter/models/setting/model_language.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
