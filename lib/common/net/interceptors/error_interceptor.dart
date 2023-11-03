@@ -6,7 +6,6 @@ import 'package:ones_ai_flutter/platform/web/main_web.dart'
     if (dart.library.io) 'package:ones_ai_flutter/platform/mobile/main_mobile.dart';
 
 class ErrorInterceptors extends InterceptorsWrapper {
-
   ErrorInterceptors();
 
   @override

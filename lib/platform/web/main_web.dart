@@ -7,8 +7,7 @@ import 'package:redux/redux.dart';
 
 import '../../common/redux/global/ones_state.dart';
 
-void initByPlatform() {
-}
+void initByPlatform() {}
 
 Future<bool> isConnected() async {
   return true;
@@ -24,7 +23,6 @@ Future<void> saveToken(User user, Store<OnesGlobalState> store) async {
       'lt=${user.token};expires=Thu, 18 Dec 2020 12:00:00 UTC';
   CommonUtils.changeUser(store, user);
 }
-
 
 Future<String> getCurrentRequestUrl() {
   print(html.window.location.hash);

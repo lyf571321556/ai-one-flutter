@@ -24,11 +24,8 @@ class GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     final ThemeData themeData = Theme.of(context);
-    final List<Color> _colors = colors ??
-        [
-          themeData.primaryColor,
-          themeData.primaryColor
-        ];
+    final List<Color> _colors =
+        colors ?? [themeData.primaryColor, themeData.primaryColor];
     return DecoratedBox(
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: _colors),
