@@ -1,7 +1,6 @@
 //import 'package:bot_toast/bot_toast.dart';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fluintl/fluintl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -10,11 +9,12 @@ import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:ones_ai_flutter/resources/font_icons.dart';
-import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/widget/button/gradient_button.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/platform/web/main_web.dart'
     if (dart.library.io) 'package:ones_ai_flutter/platform/mobile/main_mobile.dart';
+
+import '../../l10n/intl_delegate.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           hintStyle: TextStyle(
             fontSize: 14,
           ),
-          hintText: IntlUtil.getString(context, Strings.titleAccountHint),
+          hintText: AppLocalizations.of(context)!.titleAccountHint,
           prefixIcon: Icon(
             FontIcons.ACCOUNT,
             size: 25,
@@ -232,7 +232,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         _userNameValied = accountReg.hasMatch(value!);
         return _userNameValied
             ? null
-            : IntlUtil.getString(context, Strings.titleAccountError);
+            : AppLocalizations.of(context)!.titleAccountError;
       },
     );
   }
@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             hintStyle: TextStyle(
               fontSize: 14,
             ),
-            hintText: IntlUtil.getString(context, Strings.titlePasswordHint),
+            hintText: AppLocalizations.of(context)!.titlePasswordHint,
             prefixIcon: Icon(
               FontIcons.PASSWORD,
               size: 25,
@@ -279,7 +279,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               value.length >= 8; // passwordReg.hasMatch(value);
           return _passwordValied
               ? null
-              : IntlUtil.getString(context, Strings.titlePasswordError);
+              : AppLocalizations.of(context)!.titlePasswordError(8, 32);
         },
       ),
     );
@@ -298,10 +298,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               contentColor: Colors.red);
         },
         child: Text(
-          IntlUtil.getString(
-            context,
-            Strings.titleForgetPassword,
-          ),
+          AppLocalizations.of(context)!.titleForgetPassword,
           style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -342,7 +339,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           padding: EdgeInsets.symmetric(horizontal: 18),
                           child: GradientButton(
                             child: Text(
-                                IntlUtil.getString(context, Strings.titleLogin),
+                                AppLocalizations.of(context)!.titleLogin,
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white)),
                             borderRadius: BorderRadius.circular(8),

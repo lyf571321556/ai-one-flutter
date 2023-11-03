@@ -1,11 +1,11 @@
-import 'package:fluintl/fluintl.dart';
 import 'package:flutter/material.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:ones_ai_flutter/common/storage/local_storage.dart';
+import 'package:ones_ai_flutter/l10n/intl_delegate.dart';
+import 'package:ones_ai_flutter/main.dart';
 import 'package:ones_ai_flutter/models/setting/model_language.dart';
-import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
 import 'package:redux/redux.dart';
@@ -25,11 +25,6 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _Languagelist.add(LanguageModel(Strings.languageAuto, '', ''));
-    _Languagelist.add(LanguageModel(Strings.languageZH, 'zh', 'CH'));
-    _Languagelist.add(LanguageModel(Strings.languageTW, 'zh', 'TW'));
-    _Languagelist.add(LanguageModel(Strings.languageHK, 'zh', 'HK'));
-    _Languagelist.add(LanguageModel(Strings.languageEN, 'en', 'US'));
   }
 
   @override
@@ -44,7 +39,7 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
   void _changeLauguage(
       LanguageModel languageModel, Store<OnesGlobalState> store) {
     setState(() {});
-    if (languageModel.titleId == Strings.languageAuto) {
+    if (languageModel.titleId == AppLocalizations.of(context)!.languageAuto) {
       CommonUtils.changeLocale(store, null);
       LocalDataHelper.put(Config.LOCALE, '');
     } else {
@@ -58,28 +53,39 @@ class _LanguageSelectPageState extends State<LanguageSelectPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    _Languagelist.clear();
+    _Languagelist.add(
+        LanguageModel(AppLocalizations.of(context)!.languageAuto, '', ''));
+    _Languagelist.add(
+        LanguageModel(AppLocalizations.of(context)!.languageZH, 'zh', 'CH'));
+    _Languagelist.add(
+        LanguageModel(AppLocalizations.of(context)!.languageTW, 'zh', 'TW'));
+    _Languagelist.add(
+        LanguageModel(AppLocalizations.of(context)!.languageHK, 'zh', 'HK'));
+    _Languagelist.add(
+        LanguageModel(AppLocalizations.of(context)!.languageEN, 'en', 'US'));
     return Material(child: StoreBuilder<OnesGlobalState>(
       builder: (context, store) {
         return Scaffold(
           appBar: new AppBar(
               title: new Text(
-            IntlUtil.getString(context, Strings.changeLanguage),
+            AppLocalizations.of(context)!.changeLanguage,
             style: new TextStyle(fontSize: 16.0),
           )),
           body: ListView.builder(
             itemBuilder: (context, index) {
               final LanguageModel languageModel = _Languagelist[index];
-              final String title = languageModel.titleId == Strings.languageAuto
-                  ? IntlUtil.getString(context, languageModel.titleId)
-                  : IntlUtil.getString(context, languageModel.titleId,
-                      languageCode: 'zh', countryCode: 'CH');
+              final String title = languageModel.titleId ==
+                      AppLocalizations.of(context)!.languageAuto
+                  ? languageModel.titleId
+                  : languageModel.titleId;
               bool isSelected = store.state.locale != null &&
                   store.state.locale?.countryCode ==
                       languageModel.countryCode &&
                   store.state.locale?.languageCode ==
                       languageModel.languageCode;
-              if (languageModel.titleId == Strings.languageAuto) {
+              if (languageModel.titleId ==
+                  AppLocalizations.of(context)!.languageAuto) {
                 isSelected = store.state.locale == null;
               }
               return ListTile(

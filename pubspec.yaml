@@ -24,7 +24,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   #  cupertino_icons: ^0.1.2
-  fluintl: ^2.0.0
   # 状态管理redux
   flutter_redux: ^0.10.0
   redux: ^5.0.0
@@ -44,9 +43,9 @@ dependencies:
   #网页中唤醒原生app页面
   uni_links: ^0.5.1
   fluro: ^2.0.5 #ios_ android web
-#  auto_size:
-#    git:
-#      url: https://github.com/flutterchina/auto_size.git
+  #  auto_size:
+  #    git:
+  #      url: https://github.com/flutterchina/auto_size.git
   connectivity_plus: ^5.0.1 #ios_ android web
   dio: ^5.3.3 #all
   #  dio_http_cache: ^0.2.8 # ios_ android
@@ -73,6 +72,7 @@ dependencies:
   # Helper to find the database path on mobile
   path_provider: ^2.1.1
   path: ^1.8.2
+  intl: 0.18.1 # 官方国际化方案
 dev_dependencies:
   # databse moor
   #  json_model: #latest version
@@ -82,6 +82,7 @@ dev_dependencies:
   #  retrofit_generator: # use the latest version
   build_web_compilers: ^3.2.7
   flutter_lints: ^2.0.3
+  intl_translation: 0.18.2
 #  flutter_test:
 #    sdk: flutter
 

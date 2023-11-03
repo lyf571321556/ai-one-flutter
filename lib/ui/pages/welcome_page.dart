@@ -1,9 +1,9 @@
-import 'package:fluintl/fluintl.dart';
 import 'package:flutter/material.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:ones_ai_flutter/resources/index.dart';
+
+import '../../l10n/intl_delegate.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key? key, this.title}) : super(key: key);
@@ -62,8 +62,9 @@ class _WelcomePageState extends State<WelcomePage> {
             color: Colors.white,
             child: InkWell(
               child: Center(
-                child: Text(IntlUtil.getString(context, Strings.jumpCount,
-                    params: [0, '111'])),
+                child: Text(
+                  AppLocalizations.of(context)!.welcomeCountContent('111', 0),
+                ),
               ),
               onTap: () {
                 final String routePath = store.state.user != null

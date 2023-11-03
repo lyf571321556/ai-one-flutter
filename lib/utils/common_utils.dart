@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ones_ai_flutter/common/redux/global/user_redux.dart';
 import 'package:ones_ai_flutter/models/account/user.dart';
 import 'package:redux/redux.dart';
@@ -11,6 +12,7 @@ class CommonUtils {
 
   static changeLocale(Store<OnesGlobalState> store, Locale? newlocale) {
     if (newlocale != null) {
+      Intl.defaultLocale = newlocale.toString();
       store.dispatch(ChangeLocaleAction(newlocale));
     }
   }

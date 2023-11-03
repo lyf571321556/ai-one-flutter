@@ -1,11 +1,12 @@
 //import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fluintl/fluintl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
+import 'package:ones_ai_flutter/l10n/intl_delegate.dart';
+import 'package:ones_ai_flutter/main.dart';
 import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/ui/drawers/main_left_page.dart';
 import 'package:ones_ai_flutter/ui/pages/dashboard/list/dashboard_page.dart';
@@ -27,16 +28,12 @@ class HomePage extends StatefulWidget {
 class _ChildPage {
   final String labelId;
   final String iconId;
+  final Widget childPageWidget;
 
-  _ChildPage(this.labelId, this.iconId);
+  _ChildPage(this.labelId, this.iconId, this.childPageWidget);
 }
 
-final List<_ChildPage> _allChildPages = <_ChildPage>[
-  new _ChildPage(Strings.titleProject, Drawables.PROJECT_ICON),
-  new _ChildPage(Strings.titleWiki, Drawables.WIKI_ICON),
-  new _ChildPage(Strings.titleDashboard, Drawables.DASHBOARD_ICON),
-  new _ChildPage(Strings.titleNotification, Drawables.NOTIFICATION_ICON),
-];
+final List<_ChildPage> _allChildPages = <_ChildPage>[];
 
 class _HomePageContentState extends State<HomePage>
     with SingleTickerProviderStateMixin {
@@ -49,13 +46,6 @@ class _HomePageContentState extends State<HomePage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController =
-        new TabController(vsync: this, length: _allChildPages.length);
-    _tabController!.addListener(() {
-      _NavigationBarStateKey.currentState?.changeTo(_tabController!.index);
-      _titleValueNotifier.value = IntlUtil.getString(
-          context, _allChildPages[_tabController!.index].labelId);
-    });
   }
 
   @override
@@ -69,6 +59,34 @@ class _HomePageContentState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    _allChildPages.clear();
+    _allChildPages.addAll([
+      new _ChildPage(
+          AppLocalizations.of(navigatorKey.currentContext!)!.titleProject,
+          Drawables.PROJECT_ICON,
+          ListProjectPage()),
+      new _ChildPage(
+          AppLocalizations.of(navigatorKey.currentContext!)!.titleWiki,
+          Drawables.WIKI_ICON,
+          WikiListPage()),
+      new _ChildPage(
+          AppLocalizations.of(navigatorKey.currentContext!)!.titleDashboard,
+          Drawables.DASHBOARD_ICON,
+          DashboardPage()),
+      new _ChildPage(
+          AppLocalizations.of(navigatorKey.currentContext!)!.titleNotification,
+          Drawables.NOTIFICATION_ICON,
+          NotificationListPage()),
+    ]);
+    if (_tabController == null) {
+      _tabController =
+          new TabController(vsync: this, length: _allChildPages.length);
+      _tabController!.addListener(() {
+        _NavigationBarStateKey.currentState?.changeTo(_tabController!.index);
+        _titleValueNotifier.value =
+            _allChildPages[_tabController!.index].labelId;
+      });
+    }
     final String avatar =
         StoreProvider.of<OnesGlobalState>(context).state.user?.avatar ?? '';
     return WillPopScope(
@@ -228,10 +246,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
                     size: 25.0,
                     color: Colors.blue,
                   ),
-                  text: IntlUtil.getString(
-                    context,
-                    page.labelId,
-                  ),
+                  text: page.labelId,
 //                  child: new Column(
 //                    mainAxisAlignment: MainAxisAlignment.center,
 //                    children: <Widget>[
@@ -260,29 +275,13 @@ class TabContentViewWidget extends StatelessWidget {
 
   TabContentViewWidget({Key? key, this.tabController}) : super(key: key);
 
-  Widget buildTabView(BuildContext context, _ChildPage page) {
-    final String labelId = page.labelId;
-    switch (labelId) {
-      case Strings.titleProject:
-        return ListProjectPage();
-      case Strings.titleWiki:
-        return WikiListPage();
-      case Strings.titleDashboard:
-        return DashboardPage();
-      case Strings.titleNotification:
-        return NotificationListPage();
-      default:
-        return Container();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return new TabBarView(
         controller: tabController,
         children: _allChildPages.map((_ChildPage page) {
-          return buildTabView(context, page);
+          return page.childPageWidget;
         }).toList());
   }
 }

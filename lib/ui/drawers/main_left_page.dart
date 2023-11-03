@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fluintl/fluintl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/dao/user_dao.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
-import 'package:ones_ai_flutter/resources/index.dart';
+import 'package:ones_ai_flutter/l10n/intl_delegate.dart';
+import 'package:ones_ai_flutter/main.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
 import 'package:redux/redux.dart';
 
@@ -30,7 +30,7 @@ class PageInfo {
 class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
   int currentPageIndex = 0;
   List<PageInfo> _pageInfo = [];
-  PageInfo loginOut = PageInfo(Strings.titleHome, Icons.power_settings_new, '');
+  late PageInfo loginOut;
 
   @override
   void initState() {
@@ -47,15 +47,27 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
         labelId: Strings.titleHome,
         ),
         )); */
-    _pageInfo.add(PageInfo(Strings.titleLanguage, Icons.language,
-        PageRouteManager.languagePagePath));
-    _pageInfo.add(PageInfo(
-        Strings.titleTheme, Icons.color_lens, PageRouteManager.themePagePath));
-    _pageInfo.add(PageInfo(Strings.titleLoginOut, Icons.exit_to_app, ''));
   }
 
   @override
   Widget build(BuildContext context) {
+    _pageInfo.clear();
+    loginOut = PageInfo(
+        AppLocalizations.of(navigatorKey.currentContext!)!.titleHome,
+        Icons.power_settings_new,
+        '');
+    _pageInfo.add(PageInfo(
+        AppLocalizations.of(navigatorKey.currentContext!)!.titleLanguage,
+        Icons.language,
+        PageRouteManager.languagePagePath));
+    _pageInfo.add(PageInfo(
+        AppLocalizations.of(navigatorKey.currentContext!)!.titleTheme,
+        Icons.color_lens,
+        PageRouteManager.themePagePath));
+    _pageInfo.add(PageInfo(
+        AppLocalizations.of(navigatorKey.currentContext!)!.titleLoginOut,
+        Icons.exit_to_app,
+        ''));
     /*
     if (Util.isLogin()) {
       if (!_pageInfo.contains(loginOut)) {
@@ -215,7 +227,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                           ? Theme.of(context).primaryColor
                           : null),
                   trailing: Icon(Icons.keyboard_arrow_right),
-                  title: Text(IntlUtil.getString(context, pageInfo.titleId)),
+                  title: Text(pageInfo.titleId),
                   onTap: () async {
                     if (pageInfo.pagePath == '') {
                       await UserDao.saveLoginUserInfo(null, store);

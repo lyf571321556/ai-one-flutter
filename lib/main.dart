@@ -3,22 +3,23 @@ import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
 
-import 'package:fluintl/fluintl.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/dao/app_dao.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
-import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/ui/pages/home_page.dart';
 import 'package:ones_ai_flutter/ui/pages/login_page.dart';
 import 'package:redux/redux.dart';
 import 'package:ones_ai_flutter/platform/web/main_web.dart'
     if (dart.library.io) 'package:ones_ai_flutter/platform/mobile/main_mobile.dart';
-import 'common/redux/global/locale_redux.dart';
 import 'common/routes/page_route.dart';
+import 'l10n/intl_delegate.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   runZonedGuarded(() {
@@ -88,7 +89,6 @@ class OnesAppState extends State<OnesApp> {
             platformLocale: deviceLocale));
     _buildDataFuture = AppDao.initApp(onesStore);
     super.initState();
-    setLocalizedValues(localizedValues);
   }
 
   @override
@@ -129,49 +129,29 @@ class OnesAppState extends State<OnesApp> {
           store: snapshot.data,
           child: StoreBuilder<OnesGlobalState>(builder: (context, store) {
             return MaterialApp(
+              navigatorKey: navigatorKey,
               builder: BotToastInit(),
               navigatorObservers: [BotToastNavigatorObserver()],
               onGenerateRoute: PageRouteManager.pageRouter.generator,
               debugShowCheckedModeBanner: false,
               title: 'Ones App',
-              onGenerateTitle: (BuildContext context) {
-                return IntlUtil.getString(context, Strings.titleHome);
-              },
               locale: store.state.locale ?? store.state.platformLocale,
-              supportedLocales: const [
-                Locale('zh', 'CN'),
-                Locale('en', 'US'),
-                Locale('ja', 'JP')
-              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              onGenerateTitle: (BuildContext context) {
+                return AppLocalizations.of(context)!.titleHome;
+              },
               localizationsDelegates: [
+                AppLocalizationsDelegate(),
                 GlobalWidgetsLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
-                CustomLocalizations.delegate
+                DefaultCupertinoLocalizations.delegate,
               ],
-              localeListResolutionCallback:
-                  (List<Locale>? locales, Iterable<Locale> supportedLocales) {
-                if (locales == null && locales!.length <= 0 ||
-                    store.state.locale != null) {
-                  return;
-                }
-                if (localizedValues.containsKey(locales[0].languageCode)) {
-                  if (store.state.platformLocale == null ||
-                      locales[0].languageCode !=
-                          store.state.platformLocale?.languageCode ||
-                      locales[0].countryCode !=
-                          store.state.platformLocale?.countryCode) {
-                    store.state.platformLocale = locales[0];
-//                        store.dispatch(ChangeLocaleAction(locales[0]));
-                    store.dispatch(ChangePlatformLocaleAction(locales[0]));
-                  }
-                } else {
-//                      store.dispatch(ChangeLocaleAction(supportedLocales.first));
-                  store.dispatch(
-                      ChangePlatformLocaleAction(supportedLocales.first));
-                }
-                return null;
-              },
+              // localeListResolutionCallback:
+              //     (List<Locale>? locales, Iterable<Locale> supportedLocales) {
+              //   //自定义如何解析和选择应用程序的语言列表
+              //   return supportedLocales.first;
+              // },
               theme: store.state.themeData,
 //                  routes: {
 //                    HomePage.pageName: (context) {

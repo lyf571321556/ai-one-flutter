@@ -1,10 +1,10 @@
-import 'package:fluintl/fluintl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
 import 'package:ones_ai_flutter/common/storage/local_storage.dart';
+import 'package:ones_ai_flutter/l10n/intl_delegate.dart';
 import 'package:ones_ai_flutter/resources/index.dart';
 import 'package:ones_ai_flutter/utils/utils_index.dart';
 import 'package:redux/redux.dart';
@@ -35,7 +35,7 @@ class _ThemeSelectPageState extends State<ThemeSelectPage> {
         return Scaffold(
           appBar: new AppBar(
             title: new Text(
-              IntlUtil.getString(context, Strings.changeTheme),
+              AppLocalizations.of(context)!.changeTheme,
               style: new TextStyle(fontSize: 16.0),
             ),
             actions: <Widget>[],
