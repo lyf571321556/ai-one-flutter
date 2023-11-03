@@ -4,7 +4,7 @@ import 'package:ones_ai_flutter/common/net/dio/http_result.dart';
 import 'package:ones_ai_flutter/models/account/index.dart';
 
 class UserApi {
-  static final String LOGIN_URL = 'project/master/auth/login';
+  static final String LOGIN_URL = 'auth/v2/login';
 
   static Future<HttpResult> login(
       String userName, String password, CancelToken? token) async {

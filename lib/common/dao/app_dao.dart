@@ -14,15 +14,17 @@ class AppDao {
       Store<OnesGlobalState> store) async {
     print('initapp');
     await LocalDataHelper.ready();
-    final String userInfo = await LocalDataHelper.get(Config.USER_INFO);
-    User? user; //await UserDao.getUserInfo();
-    final Map<String, dynamic> userMap = json.decode(userInfo);
-    user = User.fromJson(userMap);
-    CommonUtils.changeUser(store, user);
+    final String? userInfo = await LocalDataHelper.get(Config.USER_INFO);
+    if (userInfo != null) {
+      User? user; //await UserDao.getUserInfo();
+      final Map<String, dynamic> userMap = json.decode(userInfo);
+      user = User.fromJson(userMap);
+      CommonUtils.changeUser(store, user);
+    }
 
     ///切换语言
-    final String localInfo = await LocalDataHelper.get(Config.LOCALE);
-    if (localInfo.length != 0) {
+    final String? localInfo = await LocalDataHelper.get(Config.LOCALE);
+    if (localInfo != null && localInfo.length != 0) {
       final newlocal =
           new Locale(localInfo.split('-')[0], localInfo.split('-')[1]);
       CommonUtils.changeLocale(store, newlocal);
@@ -34,8 +36,8 @@ class AppDao {
         indicatorColor: Colors.white,
         platform: TargetPlatform.iOS);
 
-    final String colorKey = await LocalDataHelper.get(Config.THEME_COLOR);
-    if (colorKey.length != 0) {
+    final String? colorKey = await LocalDataHelper.get(Config.THEME_COLOR);
+    if (colorKey != null && colorKey.length != 0) {
       newThemeData = ThemeData.light().copyWith(
           primaryColor: themeColorMap[colorKey],
           colorScheme:

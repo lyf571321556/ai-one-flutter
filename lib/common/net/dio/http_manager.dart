@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/net/dio/http_code.dart';
 import 'package:ones_ai_flutter/common/net/dio/http_result.dart';
@@ -17,9 +18,11 @@ class HttpManager {
   static final int READ_TIMEOUT = 5000;
   static Dio? _httpClient;
   static final String web_dev_baseUrl = 'http://127.0.0.1:3000/api/';
-  static final String mobile_dev_baseUrl = 'https://devapi.myones.net/';
+  static final String mobile_dev_baseUrl =
+      'https://appdev.myones.net/api/project/';
   static final String web_release_baseUrl = 'http://127.0.0.1:3000/api/';
-  static final String mobile_release_baseUrl = 'https://devapi.myones.net/';
+  static final String mobile_release_baseUrl =
+      'https://appdev.myones.net/api/project/';
   final TokenInterceptor _tokenInterceptors = new TokenInterceptor();
 
   factory HttpManager() => _sharedInstance();
@@ -28,9 +31,9 @@ class HttpManager {
 
   String _getBaseUrl() {
     if (Config.RELEASE) {
-      return Config.runInWeb ? web_release_baseUrl : mobile_release_baseUrl;
+      return kIsWeb ? web_release_baseUrl : mobile_release_baseUrl;
     } else {
-      return Config.runInWeb ? web_dev_baseUrl : mobile_dev_baseUrl;
+      return kIsWeb ? web_dev_baseUrl : mobile_dev_baseUrl;
     }
   }
 
@@ -100,7 +103,6 @@ class HttpManager {
         httpMethod: HttpMethod.POST,
         pathParams: pathParams,
         bodyParams: bodyParams,
-        formData: formData ?? FormData.fromMap({}),
         token: token ?? CancelToken());
 //            .then((response) {
 //      if (response == null) {
@@ -217,7 +219,7 @@ class HttpManager {
             onSendProgress: onSendprogressCallBack,
             onReceiveProgress: onReceiveProgressCallBack,
             cancelToken: token,
-            options: Options(method: 'POST'));
+            options: Options(headers: <String, dynamic>{}, extra: {}));
 //            .catchError((Object err) {
 //          if (resultCallBack != null) {
 //            resultCallBack.onError(catchError(err));
@@ -228,7 +230,7 @@ class HttpManager {
         response = await _httpClient!.get(
           url,
           cancelToken: token,
-          options: Options(method: 'GET'),
+          options: Options(headers: <String, dynamic>{}, extra: {}),
         );
 //            .catchError((Object err) {
 //          if (resultCallBack != null) {

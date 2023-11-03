@@ -26,9 +26,11 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    print "compileSdkVersion-${flutter.compileSdkVersion}"
     compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
+        print "VERSION_1_8-${JavaVersion.VERSION_1_8}"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -44,19 +46,14 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.ai_one_flutter"
+        print "minSdkVersion-${flutter.minSdkVersion}"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 30
+        print "targetSdkVersion-${flutter.targetSdkVersion}"
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
-    }
 
     signingConfigs {
         debug {
@@ -64,7 +61,8 @@ android {
             storePassword '123456'
             keyAlias 'ones'
             keyPassword '123456'
-            v2SigningEnabled false
+            v1SigningEnabled true
+            v2SigningEnabled true
 
             ext.betaDistributionReleaseNotesFilePath = ""
             ext.betaDistributionGroupAliases = "ones.ai"
@@ -80,24 +78,76 @@ android {
 //            storePassword signingStorePassword
 //            keyAlias signingKeyAlias
 //            keyPassword signingKeyPassword
-            v2SigningEnabled false
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+            shrinkResources false
+            zipAlignEnabled false
+            minifyEnabled false
+
+            manifestPlaceholders = [
+                    leanCloudPushName: "ai.ones.android.ones.sandbox.push",
+            ]
+
+            buildConfigField 'String', 'typeOfDeployment', "\"cloud\""
+            buildConfigField "String", "defaultServerUrl", "\"https://appdev.myones.net/api/project\""
+            buildConfigField "String", "defaultWikiServerUrl", "\"https://appdev.myones.net/wiki\""
+            buildConfigField "boolean", "useDebugEnv", "true"
+            buildConfigField 'String', 'appId', "\"00000000-0000-0000-0000-000000000000\""
+            buildConfigField "String", "deviceProfile", "\"ones_project_dev\""
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        profile {
+            debuggable false
+            crunchPngs true
+            shrinkResources true
+            zipAlignEnabled true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+
     flavorDimensions "channel"
 
     productFlavors {
         dev {
             dimension "channel"
             applicationIdSuffix ".dev"
+            buildConfigField 'String', 'paramKey', "\"paramValue\""
+            manifestPlaceholders = [
+                    manifestParamKey: "manifestParamValue",
+            ]
         }
 
         preview {
             dimension "channel"
             applicationIdSuffix ".preview"
+            buildConfigField 'String', 'paramKey', "\"paramValue\""
+            manifestPlaceholders = [
+                    manifestParamKey: "manifestParamValue",
+            ]
         }
 
         production {
             dimension "channel"
+            buildConfigField 'String', 'paramKey', "\"paramValue\""
+            manifestPlaceholders = [
+                    manifestParamKey: "manifestParamValue",
+            ]
         }
     }
 }

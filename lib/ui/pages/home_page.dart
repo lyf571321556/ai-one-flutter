@@ -1,6 +1,7 @@
 //import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluintl/fluintl.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ones_ai_flutter/common/config/app_config.dart';
@@ -42,7 +43,7 @@ class _HomePageContentState extends State<HomePage>
   DateTime? _lastPressedAt;
   TabController? _tabController;
   GlobalKey<_NavigationBarState> _NavigationBarStateKey = GlobalKey();
-  GlobalKey<_TitleBarWidgetState> _TitleBarWidgetStateKey = GlobalKey();
+  final _titleValueNotifier = ValueNotifier<String>('');
 
   @override
   void initState() {
@@ -52,8 +53,8 @@ class _HomePageContentState extends State<HomePage>
         new TabController(vsync: this, length: _allChildPages.length);
     _tabController!.addListener(() {
       _NavigationBarStateKey.currentState?.changeTo(_tabController!.index);
-      _TitleBarWidgetStateKey.currentState?.ssetTitle(IntlUtil.getString(
-          context, _allChildPages[_tabController!.index].labelId));
+      _titleValueNotifier.value = IntlUtil.getString(
+          context, _allChildPages[_tabController!.index].labelId);
     });
   }
 
@@ -61,6 +62,7 @@ class _HomePageContentState extends State<HomePage>
   void dispose() {
     // TODO: implement dispose
     _tabController!.dispose();
+    _titleValueNotifier.dispose();
     super.dispose();
   }
 
@@ -92,16 +94,18 @@ class _HomePageContentState extends State<HomePage>
           appBar: PreferredSize(
             child: AppBar(
               elevation: 1,
-              leading: Config.runInWeb
+              leading: kIsWeb
                   ? Image.network(
                       avatar,
                       fit: BoxFit.cover,
                     )
                   : CachedNetworkImage(
+                      height: 24,
+                      width: 24,
                       imageUrl: avatar,
                       imageBuilder: (context, imageProvider) => Container(
                         constraints:
-                            BoxConstraints.tightFor(width: 50, height: 50),
+                            BoxConstraints.tightFor(width: 24, height: 24),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
@@ -110,10 +114,23 @@ class _HomePageContentState extends State<HomePage>
                           ),
                         ),
                       ),
+                      errorWidget: (context, url, error) => Container(
+                        constraints:
+                            BoxConstraints.tightFor(width: 24, height: 24),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage(
+                              ResourceUtils.getImgPath('default_avatar'),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                       placeholder: (context, url) {
                         return Container(
                           constraints:
-                              BoxConstraints.tightFor(width: 50, height: 50),
+                              BoxConstraints.tightFor(width: 24, height: 24),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -127,10 +144,15 @@ class _HomePageContentState extends State<HomePage>
                       },
                       fit: BoxFit.cover,
                     ),
-              title: TitleBarWidget(
-                key: _TitleBarWidgetStateKey,
-                title: IntlUtil.getString(
-                    context, _allChildPages[_tabController!.index].labelId),
+              title: ValueListenableBuilder<String>(
+                valueListenable: _titleValueNotifier,
+                builder: (context, value, child) {
+                  return Text(
+                    value,
+                    style: TextStyle(color: Colors.white),
+                  );
+                },
+                child: Text(''),
               ),
 //                title: NavigationBarWidget(_tabController),
               centerTitle: false,
@@ -150,48 +172,6 @@ class _HomePageContentState extends State<HomePage>
           ),
         ),
       ),
-    );
-  }
-}
-
-class TitleBarWidget extends StatefulWidget {
-  final String? title;
-
-  TitleBarWidget({required Key key, this.title}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _TitleBarWidgetState(title);
-  }
-}
-
-class _TitleBarWidgetState extends State<TitleBarWidget> {
-  String? _title;
-
-  _TitleBarWidgetState(this._title) : super();
-
-  void ssetTitle(String title) {
-    setState(() {
-      _title = title;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      decoration: BoxDecoration(color: Colors.transparent),
-      constraints: BoxConstraints.expand(),
-      margin: EdgeInsets.only(top: 0),
-      //MediaQuery.of(context).size.height * 0.008
-      padding: EdgeInsets.all(0),
-      //MediaQuery.of(context).size.height * 0.007
-      alignment: Alignment.centerLeft,
-      child: Text(
-        _title ?? '',
-        style: TextStyle(color: Colors.white),
-      ), //IntlUtil.getString(context, Strings.home_title)
     );
   }
 }

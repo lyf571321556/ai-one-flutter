@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluintl/fluintl.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'package:ones_ai_flutter/common/dao/user_dao.dart';
 import 'package:ones_ai_flutter/common/redux/global/ones_state.dart';
 import 'package:ones_ai_flutter/common/routes/page_route.dart';
@@ -96,7 +96,7 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                         ),
                       ),
                     ),
-                    child: Config.runInWeb
+                    child: kIsWeb
                         ? Image.network(
                             StoreProvider.of<OnesGlobalState>(context)
                                     .state

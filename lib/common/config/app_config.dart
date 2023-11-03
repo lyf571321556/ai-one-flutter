@@ -1,5 +1,4 @@
 class Config {
-  static bool runInWeb = false;
   static const PAGE_SIZE = 20;
   static const RELEASE = const bool.fromEnvironment('dart.vm.product');
   static const TOKEN_KEY = 'token';

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:ones_ai_flutter/common/config/app_config.dart';
 import 'dart:html' as html;
 
 import 'package:ones_ai_flutter/models/account/user.dart';
@@ -9,7 +8,6 @@ import 'package:redux/redux.dart';
 import '../../common/redux/global/ones_state.dart';
 
 void initByPlatform() {
-  Config.runInWeb = identical(0, 0.0);
 }
 
 Future<bool> isConnected() async {

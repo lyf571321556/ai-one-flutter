@@ -52,7 +52,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _loginAanimationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1500));
     _loginButtonWidthAnimation = Tween<double>(
-            begin: MediaQuery.of(context).size.width, end: _loginButtonMinWidth)
+            begin: MediaQueryData.fromView(
+                    WidgetsBinding.instance.platformDispatcher.views.first)
+                .size
+                .width,
+            end: _loginButtonMinWidth)
         .animate(CurvedAnimation(
             parent: _loginAanimationController!,
             curve: Interval(.0, 0.25, curve: Curves.ease))
@@ -69,7 +73,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     });
     _homePageZoomOut = new Tween(
       begin: _loginButtonMinWidth,
-      end: MediaQuery.of(context).size.width,
+      end: MediaQueryData.fromView(
+              WidgetsBinding.instance.platformDispatcher.views.first)
+          .size
+          .width,
     ).animate(
       new CurvedAnimation(
         parent: _loginSuccessAnimationController!,
@@ -80,8 +87,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
       ),
     );
-    _accountController.text = 'huangjinfan+5001@ones.ai';
-    _passwordController.text = 'Aa123456';
+    _accountController.text = 'marsdev@ones.ai';
+    _passwordController.text = 'Test1234';
   }
 
   @override

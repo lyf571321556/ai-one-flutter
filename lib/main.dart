@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
 
@@ -45,12 +46,12 @@ void main() {
 
 void initPlatformStateForUniLinks() async {
   print('request coming');
-  final String url = await getCurrentRequestUrl();
+  final String? url = await getCurrentRequestUrl();
   print(url);
   final AppRouteMatch? appRouteMatch =
       PageRouteManager.pageRouter.match(getCurrentRequestUrlPath());
   print(appRouteMatch?.parameters);
-  if (appRouteMatch != null) {
+  if (appRouteMatch != null && url != null) {
     goToDestPage(url);
   }
   print('request ending');
@@ -72,6 +73,7 @@ class OnesAppState extends State<OnesApp> {
   void initState() {
     // TODO: implement initState
     initPlatformStateForUniLinks();
+    final Locale? deviceLocale = PlatformDispatcher.instance.locale;
     onesStore = new Store<OnesGlobalState>(createOnesAppReducer,
         middleware: onesMiddlewares,
         initialState: new OnesGlobalState(
@@ -83,7 +85,7 @@ class OnesAppState extends State<OnesApp> {
                 highlightColor: Colors.lightBlueAccent,
                 indicatorColor: Colors.white,
                 platform: TargetPlatform.iOS),
-            platformLocale: Localizations.localeOf(context)));
+            platformLocale: deviceLocale));
     _buildDataFuture = AppDao.initApp(onesStore);
     super.initState();
     setLocalizedValues(localizedValues);
@@ -136,10 +138,15 @@ class OnesAppState extends State<OnesApp> {
                 return IntlUtil.getString(context, Strings.titleHome);
               },
               locale: store.state.locale ?? store.state.platformLocale,
-              supportedLocales: CustomLocalizations.supportedLocales,
+              supportedLocales: const [
+                Locale('zh', 'CN'),
+                Locale('en', 'US'),
+                Locale('ja', 'JP')
+              ],
               localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
                 CustomLocalizations.delegate
               ],
               localeListResolutionCallback:
