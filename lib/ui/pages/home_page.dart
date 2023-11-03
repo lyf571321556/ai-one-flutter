@@ -99,38 +99,23 @@ class _HomePageContentState extends State<HomePage>
                       avatar,
                       fit: BoxFit.cover,
                     )
-                  : CachedNetworkImage(
-                      height: 24,
-                      width: 24,
-                      imageUrl: avatar,
-                      imageBuilder: (context, imageProvider) => Container(
-                        constraints:
-                            BoxConstraints.tightFor(width: 24, height: 24),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        constraints:
-                            BoxConstraints.tightFor(width: 24, height: 24),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage(
-                              ResourceUtils.getImgPath('default_avatar'),
+                  : Container(
+                      padding: const EdgeInsets.only(
+                          left: 16, top: 12, bottom: 12, right: 8),
+                      constraints:
+                          BoxConstraints.tightFor(width: 12, height: 12),
+                      child: CachedNetworkImage(
+                        imageUrl: avatar,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                      placeholder: (context, url) {
-                        return Container(
-                          constraints:
-                              BoxConstraints.tightFor(width: 24, height: 24),
+                        errorWidget: (context, url, error) => Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -140,9 +125,22 @@ class _HomePageContentState extends State<HomePage>
                               fit: BoxFit.cover,
                             ),
                           ),
-                        );
-                      },
-                      fit: BoxFit.cover,
+                        ),
+                        placeholder: (context, url) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  ResourceUtils.getImgPath('default_avatar'),
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                        fit: BoxFit.cover,
+                      ),
                     ),
               title: ValueListenableBuilder<String>(
                 valueListenable: _titleValueNotifier,

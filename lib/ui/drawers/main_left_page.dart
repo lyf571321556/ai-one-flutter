@@ -105,23 +105,27 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                                 '',
                             fit: BoxFit.cover,
                           )
-                        : CachedNetworkImage(
-                            imageUrl: StoreProvider.of<OnesGlobalState>(context)
-                                    .state
-                                    .user
-                                    ?.avatar ??
-                                '',
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, top: 12, bottom: 12, right: 8),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  StoreProvider.of<OnesGlobalState>(context)
+                                          .state
+                                          .user
+                                          ?.avatar ??
+                                      '',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
-                            placeholder: (context, url) {
-                              return Container(
+                              errorWidget: (context, url, error) => Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
@@ -132,9 +136,23 @@ class _MainLeftMenuPageState extends State<MainLeftMenuPage> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                              );
-                            },
-                            fit: BoxFit.cover,
+                              ),
+                              placeholder: (context, url) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        ResourceUtils.getImgPath(
+                                            'default_avatar'),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                              fit: BoxFit.cover,
+                            ),
                           ),
                   ),
                   SizedBox(height: 6),

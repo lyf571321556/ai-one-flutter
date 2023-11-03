@@ -22,9 +22,8 @@ class UserDao {
   }
 
   static saveLoginUserInfo(User? user, Store<OnesGlobalState> store) async {
-    final bool result = await LocalDataHelper.put(
+    await LocalDataHelper.put(
         Config.USER_INFO, user == null ? null : json.encode(user.toJson()));
     CommonUtils.changeUser(store, user);
-    return result;
   }
 }
