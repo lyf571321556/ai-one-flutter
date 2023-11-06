@@ -116,6 +116,7 @@ mixin LocalizationMessagesMixin {
   }
 
   String get titleNotification {
-    return Intl.message('通知', name: 'titleNotification', desc: '底部导航栏-通知');
+    return Intl.message('fallback-通知',
+        name: 'titleNotification', desc: '底部导航栏-通知');
   }
 }
