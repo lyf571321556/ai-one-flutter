@@ -1,5 +1,6 @@
 {
   "@@last_modified": "2023-11-03T17:53:26.585192",
+  "@@locale":"en_US",
   "titleHome": "Home",
   "@titleHome": {
     "description": "应用的标题名称",
@@ -157,12 +158,6 @@
   "titleDashboard": "Dashboard",
   "@titleDashboard": {
     "description": "底部导航栏-仪表盘",
-    "type": "text",
-    "placeholders": {}
-  },
-  "titleNotification": "Notification",
-  "@titleNotification": {
-    "description": "底部导航栏-通知",
     "type": "text",
     "placeholders": {}
   }
