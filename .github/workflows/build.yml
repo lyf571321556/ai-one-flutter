@@ -68,7 +68,7 @@ jobs:
         with:
           submodules: false
           fetch-depth: 0
-          path: 'ones_mobile'
+#          path: 'ones_mobile'  #指定代码下载目录
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -154,7 +154,7 @@ jobs:
         with:
           submodules: false
           fetch-depth: 0
-          path: 'ones_mobile'
+#          path: 'ones_mobile'  #指定代码下载目录
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
