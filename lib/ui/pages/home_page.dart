@@ -237,6 +237,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
 //            .toList(),
           child: TabBar(
         controller: widget._tabController,
+        labelColor: Colors.blue,
         isScrollable: false,
         indicatorSize: TabBarIndicatorSize.tab,
         tabs: _allChildPages

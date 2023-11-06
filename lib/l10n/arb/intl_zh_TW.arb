@@ -142,25 +142,25 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleProject": "项目",
+  "titleProject": "TW-项目",
   "@titleProject": {
     "description": "底部导航栏-项目",
     "type": "text",
     "placeholders": {}
   },
-  "titleWiki": "文档",
+  "titleWiki": "TW-文档",
   "@titleWiki": {
     "description": "底部导航栏-文档",
     "type": "text",
     "placeholders": {}
   },
-  "titleDashboard": "仪表盘",
+  "titleDashboard": "TW-仪表盘",
   "@titleDashboard": {
     "description": "底部导航栏-仪表盘",
     "type": "text",
     "placeholders": {}
   },
-  "titleNotification": "通知",
+  "titleNotification": "TW-通知",
   "@titleNotification": {
     "description": "底部导航栏-通知",
     "type": "text",

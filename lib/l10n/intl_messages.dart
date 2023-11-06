@@ -59,9 +59,7 @@ mixin LocalizationMessagesMixin {
 
   String get languageHK {
     return Intl.message('繁體中文（香港）',
-        name: 'languageHK',
-        desc: '应'
-            '用-切换语言-繁體中文（香港）');
+        name: 'languageHK', desc: '应用-切换语言-繁體中文（香港）');
   }
 
   String get languageEN {
