@@ -3,11 +3,11 @@ set -e
 echo "Build Env Info:Build FLUTTER_VERSION:$FLUTTER_VERSION,Build FLUTTER_CHANNEL:$FLUTTER_CHANNEL"
 echo "Build Params Info:Build Dir:$GITHUB_WORKSPACE,Build Tag:$CURRENT_TAG,Build Branch:$CURRENT_BRANCH,Build BUILD_REVISION:$BUILD_REVISION"
 
-bundle install --gemfile ios_/Gemfile
+bundle install --gemfile ios/Gemfile
 flutter pub get
-cd $GITHUB_WORKSPACE/ios_
+cd $GITHUB_WORKSPACE/ios
 # 解决Flutter.xcframework must exist. If you're running pod install manually, make sure flutter build ios_ is executed first
-flutter precache --ios_
+flutter precache --ios
 bundle exec pod install --repo-update
 echo "===Fastlane env output==="
 bundle exec fastlane env

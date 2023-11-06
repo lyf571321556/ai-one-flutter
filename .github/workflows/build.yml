@@ -1,0 +1,224 @@
+name: ones-mobile-ci
+
+on:
+  push:
+    branches:
+      - "ones_beta_migration"
+      - "beta"
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+env:
+  FLUTTER_VERSION: '3.13.1'
+  FLUTTER_CHANNEL: 'stable'
+  FLUTTER_JDK: '11'
+jobs:
+  web-build-job:
+    name: Build for web
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+          fetch-depth: 0
+      - name: Extract branch or tag name
+        shell: bash
+        run: |
+          echo "SOURCE_BRANCH=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          BUILD_REVISION=`git rev-list HEAD --count`
+          echo "BUILD_REVISION=${BUILD_REVISION}"
+          echo "BUILD_REVISION=${BUILD_REVISION}" >> "$GITHUB_OUTPUT"
+        id: CURRENT_TAG_OR_TAG
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:'
+      - name: Build web with shell
+        env:
+          CURRENT_TAG: ${{ steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_TAG }}
+          CURRENT_BRANCH: ${{ steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_BRANCH }}
+          BUILD_REVISION: ${{ steps.CURRENT_TAG_OR_TAG.outputs.BUILD_REVISION }}
+          SENTRY_ORG: ${{secrets.SENTRY_ORG}}
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+          SENTRY_PROJECT: ${{secrets.SENTRY_PROJECT}}
+          RELEASE_GITHUB_TOKEN: ${{secrets.RELEASE_GITHUB_TOKEN}}
+          SENSORS_DSN: ${{secrets.SENSORS_DSN}}
+        run: bash ./web/build.sh
+      - name: Upload artifact to Github Release
+        if: ${{ startsWith(steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_TAG, 'v') }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "ones-ai-mobile-web*.tar.gz"
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          allowUpdates: true
+
+  android-build-job:
+    name: Build for android
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout ones_mobile code
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+          fetch-depth: 0
+          path: 'ones_mobile'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:'
+      - name: Extract branch or tag name
+        shell: bash
+        run: |
+          pwd
+          ls -a
+          echo "SOURCE_BRANCH=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          cd ones_mobile
+          BUILD_REVISION=`git rev-list HEAD --count`
+          echo "BUILD_REVISION=${BUILD_REVISION}"
+          echo "BUILD_REVISION=${BUILD_REVISION}" >> "$GITHUB_OUTPUT"
+          echo ${{ secrets.JKS_STORE_FILE_BASE64 }} | openssl enc -base64 -d -A > $GITHUB_WORKSPACE/ones_mobile/android/app/key/ones_release.jks
+        id: CURRENT_TAG_OR_TAG
+      - name: Cache jdk
+        id: cache-jdk
+        uses: actions/cache@v3
+        with:
+          path: ${{ runner.tool_cache }}/Java_Zulu_jdk
+          key: ${{ runner.os }}-flutter-build-android-jdk-${{ env.FLUTTER_JDK }}
+      - name: Setup JDK
+        if: steps.cache-jdk.outputs.cache-hit != 'true'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.FLUTTER_JDK }}
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+      - run: gem install bundler
+      #      - name: Cache flutter sdk
+      #        uses: actions/cache@v3
+      #        with:
+      #          path: $GITHUB_WORKSPACE/flutter
+      #          key: ${{ runner.os }}-flutter-build-android-${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+      - name: Cache gradle
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/.gradle/caches
+          key: ${{ runner.os }}-flutter-build-android-gradle-${{ hashFiles( './ones_mobile/pubspec.lock') }}
+      - name: build android with fastlane
+        env:
+          CURRENT_TAG: ${{ steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_TAG }}
+          CURRENT_BRANCH: ${{ steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_BRANCH }}
+          BUILD_REVISION: ${{ steps.CURRENT_TAG_OR_TAG.outputs.BUILD_REVISION }}
+          APPCENTER_API_TOKEN_ANDROID: ${{ secrets.APPCENTER_API_TOKEN_ANDROID }}
+          APPCENTER_APP_NAME_ANDROID: ${{ secrets.APPCENTER_APP_NAME_ANDROID }}
+          APPCENTER_OWNER_NAME: ${{ secrets.APPCENTER_OWNER_NAME }}
+          LEANCLOUD_APP_ID: ${{secrets.LEANCLOUD_APP_ID}}
+          LEANCLOUD_APP_KEY: ${{secrets.LEANCLOUD_APP_KEY}}
+          LEANCLOUD_SERVER_URL: ${{secrets.LEANCLOUD_SERVER_URL}}
+          JKS_STORE_PASSWORD: ${{secrets.JKS_STORE_PASSWORD}}
+          JKS_KEY_ALIAS: ${{secrets.JKS_KEY_ALIAS}}
+          JKS_KEY_PASSWORD: ${{secrets.JKS_STORE_PASSWORD}}
+          RELEASE_GITHUB_TOKEN: ${{secrets.RELEASE_GITHUB_TOKEN}}
+          SENTRY_ORG: ${{secrets.SENTRY_ORG}}
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+          SENTRY_PROJECT: ${{secrets.SENTRY_PROJECT}}
+          SENSORS_DSN: ${{secrets.SENSORS_DSN}}
+        run: bash ./ones_mobile/android/build.sh
+      - name: Upload artifact to Github Release
+        if: ${{ startsWith(steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_TAG, 'v') }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./ones_mobile/ones-ai-mobile*.apk
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          allowUpdates: true
+
+  ios-build-job:
+    name: Build for iOS
+    runs-on: macos-13
+    timeout-minutes: 80
+    steps:
+      - name: checkout ones_mobile code
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+          fetch-depth: 0
+          path: 'ones_mobile'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:'
+      - name: Extract branch or tag name
+        shell: bash
+        run: |
+          pwd
+          ls -a
+          echo "SOURCE_BRANCH=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          cd ones_mobile
+          BUILD_REVISION=`git rev-list HEAD --count`
+          echo "BUILD_REVISION=${BUILD_REVISION}"
+          echo "BUILD_REVISION=${BUILD_REVISION}" >> "$GITHUB_OUTPUT"
+        id: CURRENT_TAG_OR_TAG
+      - name: Setup ruby
+        shell: bash
+        run: |
+          ruby -v
+      #      - name: Cache flutter sdk
+      #        uses: actions/cache@v3
+      #        with:
+      #          path: $GITHUB_WORKSPACE/flutter
+      #          key: ${{ runner.os }}-flutter-build-ios-${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+      - name: Cache pods
+        uses: actions/cache@v3
+        with:
+          path: $GITHUB_WORKSPACE/ones_mobile/ios/Pods
+          key: ${{ runner.os }}-flutter-build-ios-${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}-${{ hashFiles( './ones_mobile/pubspec.lock') }}
+      - name: build iOS with fastlane
+        env:
+          CURRENT_TAG: ${{ steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_TAG }}
+          CURRENT_BRANCH: ${{ steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_BRANCH }}
+          APPCENTER_API_TOKEN_IOS: ${{ secrets.APPCENTER_API_TOKEN_IOS }}
+          APPCENTER_APP_NAME_IOS: ${{ secrets.APPCENTER_APP_NAME_IOS }}
+          APPCENTER_OWNER_NAME: ${{ secrets.APPCENTER_OWNER_NAME }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          PGY_API_KEY: ${{ secrets.PGY_API_KEY }}
+          PGY_USER_KEY: ${{ secrets.PGY_USER_KEY }}
+          APPLE_AUTH_ID_KEY: ${{ secrets.APPLE_AUTH_ID_KEY }}
+          APPLE_AUTH_ISSUER_KEY: ${{ secrets.APPLE_AUTH_ISSUER_KEY }}
+          APPLE_AUTH_KEY: ${{ secrets.APPLE_AUTH_KEY }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          BUILD_REVISION: ${{ steps.CURRENT_TAG_OR_TAG.outputs.BUILD_REVISION }}
+          LEANCLOUD_APP_ID: ${{secrets.LEANCLOUD_APP_ID}}
+          LEANCLOUD_APP_KEY: ${{secrets.LEANCLOUD_APP_KEY}}
+          LEANCLOUD_SERVER_URL: ${{secrets.LEANCLOUD_SERVER_URL}}
+          RELEASE_GITHUB_TOKEN: ${{secrets.RELEASE_GITHUB_TOKEN}}
+          SENTRY_ORG: ${{secrets.SENTRY_ORG}}
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+          SENTRY_PROJECT: ${{secrets.SENTRY_PROJECT}}
+          SENSORS_DSN: ${{secrets.SENSORS_DSN}}
+        run: sh ./ones_mobile/ios/build.sh
+      - name: Upload artifact to Github Release
+        if: ${{ startsWith(steps.CURRENT_TAG_OR_TAG.outputs.SOURCE_TAG, 'v') }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./ones_mobile/ones-ai-mobile*.ipa
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          allowUpdates: true
