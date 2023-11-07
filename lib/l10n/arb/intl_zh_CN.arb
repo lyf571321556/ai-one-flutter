@@ -160,7 +160,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleNotification": "通知",
+  "titleNotification": "Real-通知",
   "@titleNotification": {
     "description": "底部导航栏-通知",
     "type": "text",
